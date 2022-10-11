@@ -1,22 +1,19 @@
 {
   "name": "tree-sitter-luau",
-  "version": "0.1.0",
-  "description": "Luau+Roblox syntax parser built with tree-sitter =)",
+  "version": "0.0.1",
+  "description": "luau grammar for tree-sitter",
   "main": "bindings/node",
+  "keywords": [
+    "parsing",
+    "incremental"
+  ],
+  "dependencies": {
+    "nan": "^2.12.1"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.20.7"
+  },
   "scripts": {
     "test": "tree-sitter test"
-  },
-  "keywords": [
-    "luau",
-    "roblox",
-    "coding",
-    "syntax-highlighting",
-    "syntax",
-    "tree-sitter"
-  ],
-  "author": "polychromatist",
-  "license": "ISC",
-  "dependencies": {
-    "nan": "^2.16.0"
   }
 }
