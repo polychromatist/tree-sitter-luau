@@ -50,7 +50,13 @@ struct ScannerState
 
 void *tree_sitter_luau_external_scanner_create()
 {
-  return malloc(sizeof(struct ScannerState));
+  // this used to be allocated without instantiation
+  struct ScannerState* state = malloc(sizeof(struct ScannerState));
+
+  state->started = 0;
+  state->depth = 0;
+
+  return state;
 }
 
 void tree_sitter_luau_external_scanner_destroy(void *payload)
@@ -316,6 +322,9 @@ bool tree_sitter_luau_external_scanner_scan(void *payload, TSLexer *lexer, const
           state->started = LONG_STRING;
           state->depth = possible_depth;
         }
+      }
+      else{
+
       }
 
       if (state->started)

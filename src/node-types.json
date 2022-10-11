@@ -1399,16 +1399,6 @@
           }
         ]
       },
-      "name": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "name",
-            "named": true
-          }
-        ]
-      },
       "table": {
         "multiple": false,
         "required": false,
@@ -1423,6 +1413,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "name",
+          "named": true
+        }
+      ]
     }
   },
   {

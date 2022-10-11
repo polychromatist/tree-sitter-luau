@@ -1,0 +1,13 @@
+==============
+unassigned local variable
+==============
+
+local x
+
+---
+
+(chunk
+  (local_var_stmt
+    (bindinglist
+      (binding
+        (name)))))

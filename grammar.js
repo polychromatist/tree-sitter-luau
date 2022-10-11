@@ -78,7 +78,7 @@ module.exports = grammar({
         "name",
         choice($.name, alias($._tbl_fn_member, $.var))),
       $._fn_body),
-    _tbl_fn_member: $ => seq($._tbl_ident, choice($._field_named, $._method_ident)),
+    _tbl_fn_member: $ => seq($._tbl_ident, choice($._field_named, $._method_name)),
     _tbl_ident: $ => field("table", choice($.name, alias($._tbl_field_named, $.var))),
     _tbl_field_named: $ => seq($._tbl_ident, $._field_named),
 
@@ -120,9 +120,9 @@ module.exports = grammar({
     break_stmt: () => "break",
 
     local_var_stmt: $ => seq(
-      "local", alias($._local_b_list, $.bindinglist),
-      optional(seq("=", alias($._v_list, $.explist)))),
-    _local_b_list: $ => _list($.binding, ","),
+      "local",
+      $.bindinglist,
+      optional(seq("=", $.explist))),
 
     var_stmt: $ => seq(
       $.varlist, $.assign, alias($._v_list, $.explist)),
@@ -167,6 +167,8 @@ module.exports = grammar({
       $.table,
       $.unexp,
       $.binexp),
+
+    explist: $ => _list($.exp, ","),
 
     binexp: $ => choice(
       ...[
@@ -213,13 +215,16 @@ module.exports = grammar({
     exp_wrap: $ => seq("(", $.exp, ")"),
 
     call_stmt: $ => seq(
-      field("invoked", choice($._prefixexp, alias($._tbl_method, $.var))),
+      field("invoked", choice(
+        $._prefixexp,
+        alias($._tbl_method, $.var))),
       field("arglist", $.arglist)),
-    _tbl_method: $ => seq(field("table", $.prefixexp), $._method_ident),
-    _method_ident: $ => seq(":", field("method", $.name)),
-    arglist: $ => choice(seq("(", optional($.explist), ")"), $.table, $.string),
-
-    explist: $ => _list($.exp, ","),
+    _tbl_method: $ => seq(field("table", $.prefixexp), $._method_name),
+    _method_name: $ => seq(":", field("method", $.name)),
+    arglist: $ => choice(
+      seq("(", optional($.explist), ")"),
+      $.table,
+      $.string),
 
     binding: $ => seq(
       field("name", $.name),
@@ -227,9 +232,13 @@ module.exports = grammar({
 
     bindinglist: $ => _list($.binding, ","),
 
-    var: $ => choice(field("name", $.name), $._tbl_var),
+    var: $ => choice($.name, $._tbl_var),
     _tbl_var: $ => seq(
-      field("table", choice($.name, alias($._tbl_var, $.var), $.call_stmt, $.exp_wrap)),
+      field("table", choice(
+        $.name,
+        alias($._tbl_var, $.var),
+        $.call_stmt,
+        $.exp_wrap)),
       choice($._field_indexed, $._field_named)),
     _field_named: $ => seq(".", field("field", $.name)),
     _field_indexed: $ => seq("[", field("field", $.exp), "]"),
