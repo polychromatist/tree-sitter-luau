@@ -1,1 +1,0 @@
-cmd_Debug/tree_sitter_luau_binding.node := ln -f "Debug/obj.target/tree_sitter_luau_binding.node" "Debug/tree_sitter_luau_binding.node" 2>/dev/null || (rm -rf "Debug/tree_sitter_luau_binding.node" && cp -af "Debug/obj.target/tree_sitter_luau_binding.node" "Debug/tree_sitter_luau_binding.node")

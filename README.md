@@ -1,6 +1,6 @@
 ## tree-sitter-luau
 
-Parser for luau made with [tree-sitter](https://github.com/tree-sitter/tree-sitter)
+Luau grammar for [tree-sitter](https://github.com/tree-sitter/tree-sitter)
 
 ## overview
 
