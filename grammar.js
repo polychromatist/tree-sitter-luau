@@ -37,7 +37,8 @@ const _exponent_part = (...delimiters) =>
     repeat1(DECIMAL_DIGIT),
   );
 
-const _list = (rule, sep) => seq(rule, repeat(seq(sep, rule)));
+const _list_strict = (rule, sep) => seq(rule, repeat(seq(sep, rule)));
+const _list = (rule, sep) => seq(rule, repeat(seq(sep, rule)), optional(sep));
 
 module.exports = grammar({
   name: 'luau',
@@ -86,8 +87,8 @@ module.exports = grammar({
       "for", field("bindings", alias($._b_list, $.bindinglist)),
       "in", field("iterator", alias($._v_list, $.explist)),
       "do", optional(field("body", $.block)), "end"),
-    _b_list: $ => _list(field("binding", $.binding), ","),
-    _v_list: $ => _list(field("value", $.exp), ","),
+    _b_list: $ => _list_strict(field("binding", $.binding), ","),
+    _v_list: $ => _list_strict(field("value", $.exp), ","),
 
     for_range_stmt: $ => seq(
       "for", field("binding", $.binding),
@@ -126,7 +127,7 @@ module.exports = grammar({
 
     var_stmt: $ => seq(
       $.varlist, $.assign, alias($._v_list, $.explist)),
-    varlist: $ => _list($.var, ","),
+    varlist: $ => _list_strict($.var, ","),
 
     type_stmt: $ => seq(
       optional(seq("export", token.immediate(" "))),
@@ -140,10 +141,10 @@ module.exports = grammar({
     ),
     _type_stmt_gen: $ => seq(field("generic", $.name), optional(seq("=", $.type))),
     _type_stmt_genlist: $ => choice(
-      seq(_list($._type_stmt_gen, ","), optional(seq(",", $._type_stmt_packlist))),
+      seq(_list_strict($._type_stmt_gen, ","), optional(seq(",", $._type_stmt_packlist))),
       $._type_stmt_packlist),
     _type_stmt_pack: $ => seq(field("genpack", $.name), "...", optional(seq("=", $.typepack))),
-    _type_stmt_packlist: $ => _list($._type_stmt_pack, ","),
+    _type_stmt_packlist: $ => _list_strict($._type_stmt_pack, ","),
 
     assign: $ => choice(
       "=",
@@ -168,7 +169,7 @@ module.exports = grammar({
       $.unexp,
       $.binexp),
 
-    explist: $ => _list($.exp, ","),
+    explist: $ => _list_strict($.exp, ","),
 
     binexp: $ => choice(
       ...[
@@ -230,7 +231,7 @@ module.exports = grammar({
       field("name", $.name),
       optional(seq(":", field("annotation", $.type)))),
 
-    bindinglist: $ => _list($.binding, ","),
+    bindinglist: $ => _list_strict($.binding, ","),
 
     var: $ => choice($.name, $._tbl_var),
     _tbl_var: $ => seq(
@@ -250,7 +251,7 @@ module.exports = grammar({
       optional(field("body", $.block)),
       "end"),
     parlist: $ => choice(
-      seq( _list(field("binding", $.binding), ","), optional(seq(",", $._param_vararg)) ),
+      seq( _list_strict(field("binding", $.binding), ","), optional(seq(",", $._param_vararg)) ),
       $._param_vararg),
     _param_vararg: $ => seq($.vararg, optional(seq(":", $.type))),
 
@@ -274,35 +275,28 @@ module.exports = grammar({
       alias($.true, $.ttrue),
       alias($.false, $.tfalse)),
 
-    typelist: $ => choice(seq( _list($.type, ","), optional(seq(",", $._typelist_variadic)) ), $._typelist_variadic),
-    _typelist_variadic: $ => seq("...", $.type),
+    typelist: $ => prec.dynamic(1, choice(
+      seq( _list_strict($.type, ","), optional(seq(",", $._typelist_variadic)) ),
+      $._typelist_variadic)),
+    _typelist_variadic: $ => prec.dynamic(1, seq("...", $.type)),
 
     _type_nil: () => "nil",
 
     typepar: $ => choice($.type, $.typepack),
 
-    typeparlist: $ => _list($.typepar, ","),
+    typeparlist: $ => _list_strict($.typepar, ","),
 
-    typepack: $ => choice(
-      alias($._typepack_wrap, $.typepack),
-      alias($._typepack_variadic, $.typepack_var),
-      alias($._typepack_generic, $.typepack_gen)),
-    _typepack_wrap: $ => seq($._typepack_open, optional(field("typepack", $.typelist)), $._typepack_close),
-    _typepack_open: () => "(",
-    _typepack_close: () => ")",
-    _typepack_variadic: $ => seq("...", alias($.type, $.varpack)),
-    _typepack_generic: $ => seq(alias($.name, $.genpack), "..."),
+    typepack: $ => choice($._typepack_wrap, $._typepack_variadic, $._typepack_generic),
+    _typepack_wrap: $ => seq("(", optional(field("wrap", $.typelist)), ")"),
+    _typepack_variadic: $ => seq("...", alias($.type, $.variadic)),
+    _typepack_generic: $ => seq(alias($.name, $.generic), "..."),
 
-    _type_func: $ => seq(
-      optional($._typefunc_gen),
-      $._typefunc_open, optional($._typefunc_parlist), $._typefunc_then,
-      $._typefunc_then, $.typepar),
-    _typefunc_open: () => "(",
-    _typefunc_then: $ => seq(")", "->"),
+    _type_func: $ => seq(optional($._typefunc_gen), alias($._typefunc_wrap, $.typefuncpar), alias($.typepar, $.typeret)),
     _typefunc_gen: $ => seq("<", $.typegenlist, ">"),
+    _typefunc_wrap: $ => seq("(", optional($._typefunc_parlist), ")", "->"),
     _typefunc_par: $ => seq(optional(seq(field("param", $.name), ":")), $.type),
     _typefunc_parlist: $ => choice(
-      seq( _list($._typefunc_par, ","), optional(seq(",", $._typefunc_partail)) ),
+      seq( _list_strict($._typefunc_par, ","), optional(seq(",", $._typefunc_partail)) ),
       $._typefunc_partail),
     _typefunc_partail: $ => choice($._typepack_variadic, $._typepack_generic),
 
@@ -326,10 +320,10 @@ module.exports = grammar({
 
     typegen: $ => field("generic", $.name),
     typegenlist: $ => choice(
-      seq(_list($.typegen, ","), optional(seq(",", $._typegen_packlist))),
+      seq(_list_strict($.typegen, ","), optional(seq(",", $._typegen_packlist))),
       $._typegen_packlist),
     _typegen_pack: $ => seq(field("genpack", $.name), "..."),
-    _typegen_packlist: $ => _list($._typegen_pack, ","),
+    _typegen_packlist: $ => _list_strict($._typegen_pack, ","),
 
     number: $ => token(
       seq(optional("-"), choice(
@@ -362,7 +356,7 @@ module.exports = grammar({
   inline: $ => [$.prefix, $.fieldsep],
 
   supertypes: $ => [$.prefixexp, $.exp, $.statement, $.type],
-  conflicts: $ => [[$._typefunc_open, $._typepack_open]],
+  conflicts: $ => [[$._typefunc_par, $.typelist], [$._typelist_variadic, $._typepack_variadic]],
 
   word: $ => $.name,
 });

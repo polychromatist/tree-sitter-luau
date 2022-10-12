@@ -15,5 +15,13 @@
   },
   "scripts": {
     "test": "tree-sitter test"
-  }
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.luau",
+      "file-types": [
+        "luau"
+      ]
+    }
+  ]
 }

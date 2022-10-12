@@ -983,16 +983,6 @@
           }
         ]
       },
-      "param": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "name",
-            "named": true
-          }
-        ]
-      },
       "prop": {
         "multiple": true,
         "required": false,
@@ -1033,10 +1023,6 @@
           "named": true
         },
         {
-          "type": "genpack",
-          "named": true
-        },
-        {
           "type": "tfalse",
           "named": true
         },
@@ -1049,7 +1035,7 @@
           "named": true
         },
         {
-          "type": "type",
+          "type": "typefuncpar",
           "named": true
         },
         {
@@ -1057,15 +1043,11 @@
           "named": true
         },
         {
-          "type": "typepar",
-          "named": true
-        },
-        {
           "type": "typeparlist",
           "named": true
         },
         {
-          "type": "varpack",
+          "type": "typeret",
           "named": true
         }
       ]
@@ -1157,6 +1139,40 @@
     }
   },
   {
+    "type": "typefuncpar",
+    "named": true,
+    "fields": {
+      "param": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "name",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "generic",
+          "named": true
+        },
+        {
+          "type": "type",
+          "named": true
+        },
+        {
+          "type": "variadic",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "typegen",
     "named": true,
     "fields": {
@@ -1217,7 +1233,7 @@
     "type": "typepack",
     "named": true,
     "fields": {
-      "typepack": {
+      "wrap": {
         "multiple": false,
         "required": false,
         "types": [
@@ -1233,45 +1249,11 @@
       "required": false,
       "types": [
         {
-          "type": "typepack",
+          "type": "generic",
           "named": true
         },
         {
-          "type": "typepack_gen",
-          "named": true
-        },
-        {
-          "type": "typepack_var",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "typepack_gen",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "genpack",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "typepack_var",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "varpack",
+          "type": "variadic",
           "named": true
         }
       ]
@@ -1306,6 +1288,25 @@
       "types": [
         {
           "type": "typepar",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "typeret",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "type",
+          "named": true
+        },
+        {
+          "type": "typepack",
           "named": true
         }
       ]
@@ -1675,7 +1676,7 @@
     "named": false
   },
   {
-    "type": "genpack",
+    "type": "generic",
     "named": true
   },
   {

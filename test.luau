@@ -1,0 +1,3 @@
+--!nonstrict
+
+local test: () -> (a, b) -> G...
