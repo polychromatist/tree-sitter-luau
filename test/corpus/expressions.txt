@@ -1,0 +1,232 @@
+==================
+Handles nil
+==================
+
+x = nil
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (nil)))
+
+==================
+Handles true
+==================
+
+x = true
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (boolean)))
+
+==================
+Handles false
+==================
+
+x = false
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (boolean)))
+
+==================
+Handles simple number
+==================
+
+x = 1
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (number)))
+
+==================
+Handles fractional number
+==================
+
+x = 1.50
+x = .50
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (number))
+  (variable_assignment
+    (variable_declarator (identifier))
+    (number)))
+
+==================
+Handles signed number
+==================
+
+x = -1
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (unary_expression (number))))
+
+==================
+Handles exponential number
+==================
+
+x = 1e5
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (number)))
+
+==================
+Handles hexadecimal number
+==================
+
+x = 0xFF
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (number)))
+
+==================
+Handles binary number
+==================
+
+x = 0b101011
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (number)))
+
+==================
+Luau: Handles number with separators
+==================
+
+x = 1_048_576
+x = 0xFFFF_FFFF
+x = 0b_0101_0101
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (number))
+  (variable_assignment
+    (variable_declarator (identifier))
+    (number))
+  (variable_assignment
+    (variable_declarator (identifier))
+    (number)))
+
+==================
+Handles binary addition
+==================
+
+x = 1 + 1
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (binary_expression (number) (number))))
+
+==================
+Handles binary addition of variables
+==================
+
+x = x + y
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (binary_expression (identifier) (identifier))))
+
+==================
+Handles binary and/or
+==================
+
+x = foo and bar
+x = foo and bar or baz
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (binary_expression (identifier) (identifier)))
+  (variable_assignment
+    (variable_declarator (identifier))
+    (binary_expression 
+        (binary_expression (identifier) (identifier))
+        (identifier))))
+
+==================
+Handles simple table
+==================
+
+x = { true }
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (table_constructor 
+      (table_fields (field (boolean))))))
+
+==================
+Handles name key tables
+==================
+
+x = { foo = bar, bar = baz }
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (table_constructor 
+      (table_fields
+        (field (identifier) (identifier))
+        (field (identifier) (identifier))))))
+
+==================
+Handles expression key tables
+==================
+
+x = { ["foo"] = bar, [call()] = baz }
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (table_constructor 
+      (table_fields
+        (field (string) (identifier))
+        (field (function_call (identifier) (left_paren) (right_paren)) (identifier))))))

@@ -8,11 +8,15 @@
         "named": true
       },
       {
+        "type": "boolean",
+        "named": true
+      },
+      {
         "type": "callback",
         "named": true
       },
       {
-        "type": "false",
+        "type": "ifexp",
         "named": true
       },
       {
@@ -33,10 +37,6 @@
       },
       {
         "type": "table",
-        "named": true
-      },
-      {
-        "type": "true",
         "named": true
       },
       {
@@ -77,6 +77,10 @@
       },
       {
         "type": "call_stmt",
+        "named": true
+      },
+      {
+        "type": "continue_stmt",
         "named": true
       },
       {
@@ -397,6 +401,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "boolean",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "call_stmt",
@@ -819,6 +828,21 @@
     }
   },
   {
+    "type": "ifexp",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "exp",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "local_fn_stmt",
     "named": true,
     "fields": {
@@ -1023,15 +1047,11 @@
           "named": true
         },
         {
-          "type": "tfalse",
+          "type": "exp",
           "named": true
         },
         {
-          "type": "tstring",
-          "named": true
-        },
-        {
-          "type": "ttrue",
+          "type": "type",
           "named": true
         },
         {
@@ -1072,11 +1092,6 @@
         }
       ]
     }
-  },
-  {
-    "type": "tstring",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "type_stmt",
@@ -1232,24 +1247,17 @@
   {
     "type": "typepack",
     "named": true,
-    "fields": {
-      "wrap": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "typelist",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": false,
       "required": false,
       "types": [
         {
           "type": "generic",
+          "named": true
+        },
+        {
+          "type": "typelist",
           "named": true
         },
         {
@@ -1644,6 +1652,10 @@
     "named": true
   },
   {
+    "type": "continue_stmt",
+    "named": true
+  },
+  {
     "type": "do",
     "named": false
   },
@@ -1665,7 +1677,7 @@
   },
   {
     "type": "false",
-    "named": true
+    "named": false
   },
   {
     "type": "for",
@@ -1720,23 +1732,19 @@
     "named": false
   },
   {
-    "type": "tfalse",
-    "named": true
-  },
-  {
     "type": "then",
     "named": false
   },
   {
     "type": "true",
-    "named": true
-  },
-  {
-    "type": "ttrue",
-    "named": true
+    "named": false
   },
   {
     "type": "type",
+    "named": false
+  },
+  {
+    "type": "typeof",
     "named": false
   },
   {

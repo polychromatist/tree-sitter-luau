@@ -1,0 +1,133 @@
+==================
+Basic function declaration
+==================
+
+function x()
+end
+
+---
+
+(program
+  (function_declaration
+    (function_token)
+    (function_name (identifier))
+    (left_paren)
+    (right_paren)
+    (end_token)))
+
+==================
+Global function declaration with parameters
+==================
+
+function x(foo, bar)
+end
+
+---
+
+(program
+  (function_declaration
+    (function_token)
+    (function_name (identifier))
+    (left_paren)
+    (parameter_list 
+      (parameter (identifier))
+      (parameter (identifier)))
+    (right_paren)
+    (end_token)))
+
+==================
+Global function declaration with body
+==================
+
+function x()
+    return true
+end
+
+---
+
+(program
+  (function_declaration
+    (function_token)
+    (function_name (identifier))
+    (left_paren)
+    (right_paren)
+    (function_block
+        (return_statement (boolean)))
+    (end_token)))
+
+==================
+Complex function name declaration
+==================
+
+function x.y:z()
+end
+
+---
+
+(program
+  (function_declaration
+    (function_token)
+    (function_name (identifier) (table_dot) (identifier) (table_colon) (identifier))
+    (left_paren)
+    (right_paren)
+    (end_token)))
+
+==================
+Local function declaration
+==================
+
+local function x()
+end
+
+---
+
+(program
+  (local_function_declaration
+    (local_token)
+    (function_token)
+    (identifier)
+    (left_paren)
+    (right_paren)
+    (end_token)))
+
+==================
+Complex local function declaration
+==================
+
+local function foo(a, b) end
+local function bar(...) end
+local function baz(a, b, ...) end
+
+---
+
+(program
+  (local_function_declaration
+    (local_token)
+    (function_token)
+    (identifier)
+    (left_paren)
+    (parameter_list
+      (parameter (identifier))
+      (parameter (identifier)))
+    (right_paren)
+    (end_token))
+  (local_function_declaration
+    (local_token)
+    (function_token)
+    (identifier)
+    (left_paren)
+    (parameter_list
+      (parameter (ellipse)))
+    (right_paren)
+    (end_token))
+  (local_function_declaration
+    (local_token)
+    (function_token)
+    (identifier)
+    (left_paren)
+    (parameter_list
+      (parameter (identifier))
+      (parameter (identifier))
+      (parameter (ellipse)))
+    (right_paren)
+    (end_token)))

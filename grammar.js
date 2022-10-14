@@ -60,6 +60,7 @@ module.exports = grammar({
         $.local_var_stmt,
         $.call_stmt,
         $.break_stmt,
+        $.continue_stmt,
         $.do_stmt,
         $.while_stmt,
         $.repeat_stmt,
@@ -119,6 +120,7 @@ module.exports = grammar({
     do_stmt: $ => seq("do", optional(field("body", $.block)), "end"),
 
     break_stmt: () => "break",
+    continue_stmt: () => "continue",
 
     local_var_stmt: $ => seq(
       "local",
@@ -158,8 +160,7 @@ module.exports = grammar({
 
     exp: $ => choice(
       $.nil,
-      $.false,
-      $.true,
+      $.boolean,
       $.number,
       $.string,
       $.vararg,
@@ -167,7 +168,8 @@ module.exports = grammar({
       $.prefixexp,
       $.table,
       $.unexp,
-      $.binexp),
+      $.binexp,
+      $.ifexp),
 
     explist: $ => _list_strict($.exp, ","),
 
@@ -198,6 +200,11 @@ module.exports = grammar({
     unexp: $ => choice(
       ...["not", "#", "-"].map(op =>
         prec.left(PREC.UNARY, seq(field("op", op), field("arg", $.exp))))),
+
+    ifexp: $ => seq("if", $.exp, "then",
+      repeat($._ifexp_elseif),
+      "else", $.exp),
+    _ifexp_elseif: $ => seq("elseif", $.exp, "then"),
 
     table: $ => seq("{", optional($.fieldlist), "}"),
     fieldlist: $ =>
@@ -264,16 +271,15 @@ module.exports = grammar({
       $._type_singleton,
       $._type_module,
       $._type_named,
+      $._type_typeof,
       $._type_func,
+      $._type_wrap,
       $._type_table),
     _type_named: $ => prec.right(PREC.TYPEPARAM, seq(
       field("typename", $.name),
       optional(seq("<", $.typeparlist, ">")))),
     _type_module: $ => seq(field("module", $.name), ".", $._type_named),
-    _type_singleton: $ => choice(
-      alias($.string, $.tstring),
-      alias($.true, $.ttrue),
-      alias($.false, $.tfalse)),
+    _type_singleton: $ => choice($.string, $.boolean),
 
     typelist: $ => prec.dynamic(1, choice(
       seq( _list_strict($.type, ","), optional(seq(",", $._typelist_variadic)) ),
@@ -282,18 +288,22 @@ module.exports = grammar({
 
     _type_nil: () => "nil",
 
+    _type_wrap: $ => prec.dynamic(1, seq("(", $.type, ")")),
+
     typepar: $ => choice($.type, $.typepack),
 
     typeparlist: $ => _list_strict($.typepar, ","),
 
     typepack: $ => choice($._typepack_wrap, $._typepack_variadic, $._typepack_generic),
-    _typepack_wrap: $ => seq("(", optional(field("wrap", $.typelist)), ")"),
+    _typepack_wrap: $ => seq("(", optional($.typelist), ")"),
     _typepack_variadic: $ => seq("...", alias($.type, $.variadic)),
     _typepack_generic: $ => seq(alias($.name, $.generic), "..."),
 
+    _type_typeof: $ => seq("typeof", "(", $.exp, ")"),
+
     _type_func: $ => seq(optional($._typefunc_gen), alias($._typefunc_wrap, $.typefuncpar), alias($.typepar, $.typeret)),
     _typefunc_gen: $ => seq("<", $.typegenlist, ">"),
-    _typefunc_wrap: $ => seq("(", optional($._typefunc_parlist), ")", "->"),
+    _typefunc_wrap: $ => prec.dynamic(0, seq("(", optional($._typefunc_parlist), ")", "->")),
     _typefunc_par: $ => seq(optional(seq(field("param", $.name), ":")), $.type),
     _typefunc_parlist: $ => choice(
       seq( _list_strict($._typefunc_par, ","), optional(seq(",", $._typefunc_partail)) ),
@@ -334,8 +344,7 @@ module.exports = grammar({
 
     string: $ => seq($._string_start, optional($._string_content), $._string_end),
 
-    true: () => "true",
-    false: () => "false",
+    boolean: () => choice("true", "false"),
     nil: () => "nil",
 
     name: () => NAME,
@@ -356,7 +365,12 @@ module.exports = grammar({
   inline: $ => [$.prefix, $.fieldsep],
 
   supertypes: $ => [$.prefixexp, $.exp, $.statement, $.type],
-  conflicts: $ => [[$._typefunc_par, $.typelist], [$._typelist_variadic, $._typepack_variadic]],
+  conflicts: $ => [
+    [$._typefunc_par, $.typelist              ],
+    [$._typefunc_par,             $._type_wrap],
+    [$._typefunc_par, $.typelist, $._type_wrap],
+
+    [$._typelist_variadic, $._typepack_variadic]],
 
   word: $ => $.name,
 });

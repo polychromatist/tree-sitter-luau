@@ -1,2 +1,10 @@
 node_modules/
 *.swp
+/parser.exp
+/parser.obj
+/parser.lib
+/scanner.obj
+/package-lock.json
+/build
+/target
+/outfile.txt

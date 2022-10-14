@@ -1,0 +1,124 @@
+==================
+Basic variable assignment
+==================
+
+x = 1
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (number)))
+
+==================
+Multiple variable assignment
+==================
+
+a, b = 1, true
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (variable_declarator (identifier))
+    (number)
+    (boolean)))
+
+==================
+Complex variable assignment
+==================
+
+a, b, c.d.e[f][g][1], h:i().j[k]:l()[m] = true, false, 1, 4
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (variable_declarator (identifier))
+    (variable_declarator (identifier) (identifier) (identifier) (identifier) (identifier) (number))
+    (variable_declarator
+      (function_call
+        (function_call (identifier) (identifier) (left_paren) (right_paren))
+        (identifier)
+        (identifier)
+        (identifier)
+        (left_paren)
+        (right_paren))
+      (identifier))
+    (boolean)
+    (boolean)
+    (number)
+    (number)))
+
+==================
+Local variable declaration, no assignment
+==================
+
+local x
+
+---
+
+(program
+  (local_assignment
+    (local_token)
+    (variable_declarator (identifier))))
+
+==================
+Local variable declaration
+==================
+
+local x = 1
+
+---
+
+(program
+  (local_assignment
+    (local_token)
+    (variable_declarator (identifier))
+    (number)))
+
+==================
+Multiple Local variable declaration, no assignment
+==================
+
+local x, y
+
+---
+
+(program
+  (local_assignment
+    (local_token)
+    (variable_declarator (identifier))
+    (variable_declarator (identifier))))
+
+==================
+Multiple Local variable declaration
+==================
+
+local x, y = 1, false
+
+---
+
+(program
+  (local_assignment
+    (local_token)
+    (variable_declarator (identifier))
+    (variable_declarator (identifier))
+    (number)
+    (boolean)))
+
+==================
+Luau: Compound assignment
+==================
+
+a += 1
+
+---
+
+(program
+  (compound_assignment
+    (identifier)
+    (number)))

@@ -105,6 +105,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "continue_stmt"
+        },
+        {
+          "type": "SYMBOL",
           "name": "do_stmt"
         },
         {
@@ -718,6 +722,10 @@
       "type": "STRING",
       "value": "break"
     },
+    "continue_stmt": {
+      "type": "STRING",
+      "value": "continue"
+    },
     "local_var_stmt": {
       "type": "SEQ",
       "members": [
@@ -1113,11 +1121,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "false"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "true"
+          "name": "boolean"
         },
         {
           "type": "SYMBOL",
@@ -1150,6 +1154,10 @@
         {
           "type": "SYMBOL",
           "name": "binexp"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "ifexp"
         }
       ]
     },
@@ -1788,6 +1796,55 @@
               }
             ]
           }
+        }
+      ]
+    },
+    "ifexp": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "if"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "exp"
+        },
+        {
+          "type": "STRING",
+          "value": "then"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_ifexp_elseif"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "else"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "exp"
+        }
+      ]
+    },
+    "_ifexp_elseif": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "elseif"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "exp"
+        },
+        {
+          "type": "STRING",
+          "value": "then"
         }
       ]
     },
@@ -2489,7 +2546,15 @@
         },
         {
           "type": "SYMBOL",
+          "name": "_type_typeof"
+        },
+        {
+          "type": "SYMBOL",
           "name": "_type_func"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_type_wrap"
         },
         {
           "type": "SYMBOL",
@@ -2564,31 +2629,12 @@
       "type": "CHOICE",
       "members": [
         {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
-            "name": "string"
-          },
-          "named": true,
-          "value": "tstring"
+          "type": "SYMBOL",
+          "name": "string"
         },
         {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
-            "name": "true"
-          },
-          "named": true,
-          "value": "ttrue"
-        },
-        {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
-            "name": "false"
-          },
-          "named": true,
-          "value": "tfalse"
+          "type": "SYMBOL",
+          "name": "boolean"
         }
       ]
     },
@@ -2677,6 +2723,27 @@
       "type": "STRING",
       "value": "nil"
     },
+    "_type_wrap": {
+      "type": "PREC_DYNAMIC",
+      "value": 1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "("
+          },
+          {
+            "type": "SYMBOL",
+            "name": "type"
+          },
+          {
+            "type": "STRING",
+            "value": ")"
+          }
+        ]
+      }
+    },
     "typepar": {
       "type": "CHOICE",
       "members": [
@@ -2743,12 +2810,8 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "FIELD",
-              "name": "wrap",
-              "content": {
-                "type": "SYMBOL",
-                "name": "typelist"
-              }
+              "type": "SYMBOL",
+              "name": "typelist"
             },
             {
               "type": "BLANK"
@@ -2794,6 +2857,27 @@
         {
           "type": "STRING",
           "value": "..."
+        }
+      ]
+    },
+    "_type_typeof": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "typeof"
+        },
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "SYMBOL",
+          "name": "exp"
+        },
+        {
+          "type": "STRING",
+          "value": ")"
         }
       ]
     },
@@ -2850,33 +2934,37 @@
       ]
     },
     "_typefunc_wrap": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "("
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "_typefunc_parlist"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "STRING",
-          "value": ")"
-        },
-        {
-          "type": "STRING",
-          "value": "->"
-        }
-      ]
+      "type": "PREC_DYNAMIC",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "("
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_typefunc_parlist"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "STRING",
+            "value": ")"
+          },
+          {
+            "type": "STRING",
+            "value": "->"
+          }
+        ]
+      }
     },
     "_typefunc_par": {
       "type": "SEQ",
@@ -3567,13 +3655,18 @@
         }
       ]
     },
-    "true": {
-      "type": "STRING",
-      "value": "true"
-    },
-    "false": {
-      "type": "STRING",
-      "value": "false"
+    "boolean": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "true"
+        },
+        {
+          "type": "STRING",
+          "value": "false"
+        }
+      ]
     },
     "nil": {
       "type": "STRING",
@@ -3623,6 +3716,15 @@
     [
       "_typefunc_par",
       "typelist"
+    ],
+    [
+      "_typefunc_par",
+      "_type_wrap"
+    ],
+    [
+      "_typefunc_par",
+      "typelist",
+      "_type_wrap"
     ],
     [
       "_typelist_variadic",

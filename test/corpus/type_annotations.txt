@@ -1,0 +1,526 @@
+==================
+Basic type declaration
+==================
+
+type Foo = string
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    name: (identifier)
+    type: (identifier)))
+
+==================
+Exported type declaration
+==================
+
+export type Foo = string
+
+---
+
+(program
+  (type_declaration
+    (export_token)
+    (type_token)
+    (identifier)
+    (identifier)))
+
+==================
+Generic type declaration
+==================
+
+type Foo<T> = T
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    name: (identifier)
+    generics: (generics_declaration (identifier))
+    type: (identifier)))
+
+==================
+Array type declaration
+==================
+
+type Foo = { string }
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_array (identifier))))
+
+==================
+Module type declaration
+==================
+
+type Foo = Promise.Result
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_module (identifier) (identifier))))
+
+==================
+Type Declaration with generic type
+==================
+
+type Foo = Map<string, number>
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_generic 
+      (identifier)
+      (identifier)
+      (identifier))))
+
+==================
+Typeof type declaration
+==================
+
+type Foo = typeof(Account)
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_typeof (identifier))))
+
+==================
+Union type declaration
+==================
+
+type Foo = string | number
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_union (identifier) (identifier))))
+
+==================
+Intersection type declaration
+==================
+
+type Foo = string & number
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_intersection (identifier) (identifier))))
+
+==================
+Long union type declaration
+==================
+
+type Foo = string | number | Foo | Bar
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_union 
+      (type_union (type_union (identifier) (identifier)) (identifier))
+      (identifier))))
+    
+==================
+Long intersection type declaration
+==================
+
+type Foo = string & number & Foo & Bar
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_intersection 
+      (type_intersection (type_intersection (identifier) (identifier)) (identifier))
+      (identifier))))
+
+==================
+
+Mixed union & intersection type declaration
+==================
+
+type Foo = string | number & Foo | Bar
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_union 
+      (type_union (identifier) (type_intersection (identifier) (identifier)))
+      (identifier))))
+
+==================
+Optional type declaration
+==================
+
+type Foo = string?
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_optional (identifier))))
+
+==================
+Complex optional type declaration 1
+==================
+
+type Foo = string | number?
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_union (identifier)  (type_optional (identifier)))))
+
+==================
+Complex optional type declaration 2
+==================
+
+type Foo = (string | number)?
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_optional 
+      (type_parentheses
+         (type_union (identifier) (identifier)))))) 
+
+==================
+Function type declaration 1
+==================
+
+type Foo = () -> number
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_callback
+      (return_type (identifier)))))
+
+==================
+Function type declaration 2
+==================
+
+type Foo = (string, number) -> number
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_callback 
+      (type_callback_argument (identifier))
+      (type_callback_argument (identifier))
+      (return_type (identifier)))))
+
+==================
+Function empty return type declaration
+==================
+
+type Foo = (string, number) -> ()
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_callback 
+      (type_callback_argument (identifier))
+      (type_callback_argument (identifier))
+      (return_type (type_tuple)))))
+
+==================
+Function multiple return type declaration
+==================
+
+type Foo = (string, number) -> (number, string)
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_callback 
+      (type_callback_argument (identifier))
+      (type_callback_argument (identifier))
+      (return_type (type_tuple (identifier) (identifier))))))
+
+==================
+Function variadic argument type declaration
+==================
+
+type Foo = (string, ...number) -> ()
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_callback 
+      (type_callback_argument (identifier))
+      (type_callback_argument (type_variadic (identifier)))
+      (return_type (type_tuple)))))
+
+==================
+Function variadic return type declaration
+==================
+
+type Foo = (string, number) -> ...number
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_callback 
+      (type_callback_argument (identifier))
+      (type_callback_argument (identifier))
+      (return_type (type_variadic (identifier))))))
+
+==================
+Function named arg type declaration
+==================
+
+type Foo = (string, count: number) -> string
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_callback 
+      (type_callback_argument (identifier))
+      (type_callback_argument (identifier) (identifier))
+      (return_type (identifier)))))
+
+==================
+Table type declaration
+==================
+
+type Foo = { foo: string }
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_table
+      (type_table_field (identifier) (identifier)))))
+
+==================
+Table type declaration with type index
+==================
+
+type Foo = { [number]: string }
+
+---
+
+(program
+  (type_declaration
+    (type_token)
+    (identifier)
+    (type_table
+      (type_table_field (identifier) (identifier)))))
+
+==================
+Local Assignment type specifier
+==================
+
+local x: number = 3
+
+---
+
+(program
+  (local_assignment
+    (local_token)
+    (variable_declarator (identifier) (type_specifier (identifier)))
+    (number)))
+
+==================
+Multiple Local Assignment type specifier
+==================
+
+local x: number, y, z: string = 3, nil, "foo"
+
+---
+
+(program
+  (local_assignment
+    (local_token)
+    (variable_declarator (identifier) (type_specifier (identifier)))
+    (variable_declarator (identifier))
+    (variable_declarator (identifier) (type_specifier (identifier)))
+    (number)
+    (nil)
+    (string)))
+
+==================
+Function declaration return type
+==================
+
+function foo(): string
+end
+
+---
+
+(program
+  (function_declaration
+    (function_token)
+    (function_name (identifier))
+    (left_paren)
+    (right_paren)
+    (return_type (identifier))
+    (end_token)))
+
+==================
+Function declaration parameter types
+==================
+
+function foo(foo, bar: string)
+end
+
+---
+
+(program
+  (function_declaration
+    (function_token)
+    (function_name (identifier))
+    (left_paren)
+    (parameter_list 
+      (parameter (identifier))
+      (parameter (identifier) (type_specifier (identifier))))
+    (right_paren)
+    (end_token)))
+
+==================
+Function declaration ellipse type
+==================
+
+function foo(foo, bar: string, ...: string)
+end
+
+---
+
+(program
+  (function_declaration
+    (function_token)
+    (function_name (identifier))
+    (left_paren)
+    (parameter_list 
+      (parameter (identifier))
+      (parameter (identifier) (type_specifier (identifier)))
+      (parameter (ellipse) (type_specifier (identifier))))
+    (right_paren)
+    (end_token)))
+
+==================
+Generic function declaration
+==================
+
+function foo<T, U>()
+end
+
+---
+
+(program
+  (function_declaration
+    (function_token)
+    (function_name (identifier))
+    (generics_declaration (identifier) (identifier))
+    (left_paren)
+    (right_paren)
+    (end_token)))
+
+==================
+Numeric for loop type specifier
+==================
+
+for i: number = 1, 10 do
+end
+
+---
+
+(program
+  (numeric_for_statement
+    (variable_declarator (identifier) (type_specifier (identifier)))
+    (number)
+    (number)
+    (end_token)))
+
+==================
+Generic for loop type specifier
+==================
+
+for i: number, v: string in pairs(tbl) do
+end
+
+---
+
+(program
+  (generic_for_statement
+    (variable_declarator (identifier) (type_specifier (identifier)))
+    (variable_declarator (identifier) (type_specifier (identifier)))
+    (function_call (identifier) (left_paren) (function_arguments (identifier)) (right_paren))
+    (end_token)))
+
+==================
+Type assertion 1 
+==================
+
+x = 5 + c :: number
+
+---
+
+(program
+  (variable_assignment
+    (variable_declarator (identifier))
+    (binary_expression
+      (number)
+      (type_assertion (identifier) (identifier)))))

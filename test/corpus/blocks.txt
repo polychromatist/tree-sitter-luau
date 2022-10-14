@@ -1,0 +1,96 @@
+==================
+Empty do block
+==================
+
+do end
+
+---
+
+(program
+  (do_statement
+    (do_token)
+    (end_token)))
+
+==================
+Do block with statement
+==================
+
+do x = true end
+
+---
+
+(program
+  (do_statement
+    (do_token)
+    (variable_assignment
+      (variable_declarator (identifier))
+      (boolean))
+    (end_token)))
+
+==================
+Do block with multiple statements
+==================
+
+do 
+  x = true
+  y = false
+  call()
+end
+
+---
+
+(program
+  (do_statement
+    (do_token)
+    (variable_assignment
+      (variable_declarator (identifier))
+      (boolean))
+    (variable_assignment
+      (variable_declarator (identifier))
+      (boolean))
+    (function_call
+      (identifier)
+      (left_paren)
+      (right_paren))
+    (end_token)))
+
+==================
+Luau: Can use continue last statement
+==================
+
+if true then
+    continue
+end
+
+---
+
+(program
+  (if_statement
+    (if_token)
+    (boolean)
+    (then_token)
+    (continue_statement)
+    (end_token)))
+
+==================
+Luau: Continue is context sensitive
+==================
+
+if true then
+    local continue = true
+    continue
+end
+
+---
+
+(program
+  (if_statement
+    (if_token)
+    (boolean)
+    (then_token)
+    (local_assignment
+      (local_token)
+      (variable_declarator (identifier))
+      (boolean))
+    (continue_statement)
+    (end_token)))
