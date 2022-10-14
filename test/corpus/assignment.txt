@@ -6,9 +6,10 @@ x = 1
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
+(chunk
+  (var_stmt
+    (var
+      (name))
     (number)))
 
 ==================
@@ -19,10 +20,12 @@ a, b = 1, true
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
-    (variable_declarator (identifier))
+(chunk
+  (var_stmt
+    (var
+      (name))
+    (var
+      (name))
     (number)
     (boolean)))
 
@@ -34,20 +37,36 @@ a, b, c.d.e[f][g][1], h:i().j[k]:l()[m] = true, false, 1, 4
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
-    (variable_declarator (identifier))
-    (variable_declarator (identifier) (identifier) (identifier) (identifier) (identifier) (number))
-    (variable_declarator
-      (function_call
-        (function_call (identifier) (identifier) (left_paren) (right_paren))
-        (identifier)
-        (identifier)
-        (identifier)
-        (left_paren)
-        (right_paren))
-      (identifier))
+(chunk
+  (var_stmt
+    (var
+      (name))
+    (var
+      (name))
+    (var
+      (name)
+      (name)
+      (name)
+      (var
+        (name))
+      (var
+        (name))
+      (number))
+    (var
+      (call_stmt
+        (var
+          (call_stmt
+            (var
+              (name))
+            (name)
+            (arglist))
+          (name)
+          (var
+            (name)))
+        (name)
+        (arglist))
+      (var
+        (name)))
     (boolean)
     (boolean)
     (number)
@@ -61,10 +80,10 @@ local x
 
 ---
 
-(program
-  (local_assignment
-    (local_token)
-    (variable_declarator (identifier))))
+(chunk
+  (local_var_stmt
+    (binding
+      (name))))
 
 ==================
 Local variable declaration
@@ -74,10 +93,10 @@ local x = 1
 
 ---
 
-(program
-  (local_assignment
-    (local_token)
-    (variable_declarator (identifier))
+(chunk
+  (local_var_stmt
+    (binding
+      (name))
     (number)))
 
 ==================
@@ -88,11 +107,12 @@ local x, y
 
 ---
 
-(program
-  (local_assignment
-    (local_token)
-    (variable_declarator (identifier))
-    (variable_declarator (identifier))))
+(chunk
+  (local_var_stmt
+    (binding
+      (name))
+    (binding
+      (name))))
 
 ==================
 Multiple Local variable declaration
@@ -102,11 +122,12 @@ local x, y = 1, false
 
 ---
 
-(program
-  (local_assignment
-    (local_token)
-    (variable_declarator (identifier))
-    (variable_declarator (identifier))
+(chunk
+  (local_var_stmt
+    (binding
+      (name))
+    (binding
+      (name))
     (number)
     (boolean)))
 
@@ -118,7 +139,8 @@ a += 1
 
 ---
 
-(program
-  (compound_assignment
-    (identifier)
+(chunk
+  (var_stmt
+    (var
+      (name))
     (number)))

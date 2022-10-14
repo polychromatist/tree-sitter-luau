@@ -7,13 +7,9 @@ end
 
 ---
 
-(program
-  (function_declaration
-    (function_token)
-    (function_name (identifier))
-    (left_paren)
-    (right_paren)
-    (end_token)))
+(chunk
+  (fn_stmt
+    (name)))
 
 ==================
 Global function declaration with parameters
@@ -24,16 +20,11 @@ end
 
 ---
 
-(program
-  (function_declaration
-    (function_token)
-    (function_name (identifier))
-    (left_paren)
-    (parameter_list 
-      (parameter (identifier))
-      (parameter (identifier)))
-    (right_paren)
-    (end_token)))
+(chunk
+  (fn_stmt
+    (name)
+    (param (name))
+    (param (name))))
 
 ==================
 Global function declaration with body
@@ -45,15 +36,12 @@ end
 
 ---
 
-(program
-  (function_declaration
-    (function_token)
-    (function_name (identifier))
-    (left_paren)
-    (right_paren)
-    (function_block
-        (return_statement (boolean)))
-    (end_token)))
+(chunk
+  (fn_stmt
+    (name)
+    (block
+      (ret_stmt
+        (boolean)))))
 
 ==================
 Complex function name declaration
@@ -64,13 +52,11 @@ end
 
 ---
 
-(program
-  (function_declaration
-    (function_token)
-    (function_name (identifier) (table_dot) (identifier) (table_colon) (identifier))
-    (left_paren)
-    (right_paren)
-    (end_token)))
+(chunk
+  (fn_stmt
+    (name)
+    (name)
+    (name)))
 
 ==================
 Local function declaration
@@ -81,14 +67,9 @@ end
 
 ---
 
-(program
-  (local_function_declaration
-    (local_token)
-    (function_token)
-    (identifier)
-    (left_paren)
-    (right_paren)
-    (end_token)))
+(chunk
+  (local_fn_stmt
+    (name)))
 
 ==================
 Complex local function declaration
@@ -100,34 +81,16 @@ local function baz(a, b, ...) end
 
 ---
 
-(program
-  (local_function_declaration
-    (local_token)
-    (function_token)
-    (identifier)
-    (left_paren)
-    (parameter_list
-      (parameter (identifier))
-      (parameter (identifier)))
-    (right_paren)
-    (end_token))
-  (local_function_declaration
-    (local_token)
-    (function_token)
-    (identifier)
-    (left_paren)
-    (parameter_list
-      (parameter (ellipse)))
-    (right_paren)
-    (end_token))
-  (local_function_declaration
-    (local_token)
-    (function_token)
-    (identifier)
-    (left_paren)
-    (parameter_list
-      (parameter (identifier))
-      (parameter (identifier))
-      (parameter (ellipse)))
-    (right_paren)
-    (end_token)))
+(chunk
+  (local_fn_stmt
+    (name)
+    (param (name))
+    (param (name)))
+  (local_fn_stmt
+    (name)
+    (param (vararg)))
+  (local_fn_stmt
+    (name)
+    (param (name))
+    (param (name))
+    (param (vararg))))

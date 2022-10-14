@@ -6,9 +6,9 @@ x = nil
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
+(chunk
+  (var_stmt
+    (var (name))
     (nil)))
 
 ==================
@@ -19,9 +19,9 @@ x = true
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
+(chunk
+  (var_stmt
+    (var (name))
     (boolean)))
 
 ==================
@@ -32,9 +32,9 @@ x = false
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
+(chunk
+  (var_stmt
+    (var (name))
     (boolean)))
 
 ==================
@@ -45,9 +45,10 @@ x = 1
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
+(chunk
+  (var_stmt
+    (var
+      (name))
     (number)))
 
 ==================
@@ -59,12 +60,12 @@ x = .50
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
+(chunk
+  (var_stmt
+    (var (name))
     (number))
-  (variable_assignment
-    (variable_declarator (identifier))
+  (var_stmt
+    (var (name))
     (number)))
 
 ==================
@@ -75,10 +76,11 @@ x = -1
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
-    (unary_expression (number))))
+(chunk
+  (var_stmt
+    (var
+      (name))
+    (number)))
 
 ==================
 Handles exponential number
@@ -88,9 +90,10 @@ x = 1e5
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
+(chunk
+  (var_stmt
+    (var
+      (name))
     (number)))
 
 ==================
@@ -101,9 +104,10 @@ x = 0xFF
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
+(chunk
+  (var_stmt
+    (var
+      (name))
     (number)))
 
 ==================
@@ -114,9 +118,10 @@ x = 0b101011
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
+(chunk
+  (var_stmt
+    (var
+      (name))
     (number)))
 
 ==================
@@ -129,15 +134,15 @@ x = 0b_0101_0101
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
+(chunk
+  (var_stmt
+    (var (name))
     (number))
-  (variable_assignment
-    (variable_declarator (identifier))
+  (var_stmt
+    (var (name))
     (number))
-  (variable_assignment
-    (variable_declarator (identifier))
+  (var_stmt
+    (var (name))
     (number)))
 
 ==================
@@ -148,10 +153,10 @@ x = 1 + 1
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
-    (binary_expression (number) (number))))
+(chunk
+  (var_stmt
+    (var (name))
+    (binexp (number) (number))))
 
 ==================
 Handles binary addition of variables
@@ -161,10 +166,10 @@ x = x + y
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
-    (binary_expression (identifier) (identifier))))
+(chunk
+  (var_stmt
+    (var (name))
+    (binexp (var (name)) (var (name)))))
 
 ==================
 Handles binary and/or
@@ -175,15 +180,15 @@ x = foo and bar or baz
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
-    (binary_expression (identifier) (identifier)))
-  (variable_assignment
-    (variable_declarator (identifier))
-    (binary_expression 
-        (binary_expression (identifier) (identifier))
-        (identifier))))
+(chunk
+  (var_stmt
+    (var (name))
+    (binexp (var (name)) (var (name))))
+  (var_stmt
+    (var (name))
+    (binexp
+      (binexp (var (name)) (var (name)))
+      (var (name)))))
 
 ==================
 Handles simple table
@@ -193,11 +198,11 @@ x = { true }
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
-    (table_constructor 
-      (table_fields (field (boolean))))))
+(chunk
+  (var_stmt
+    (var (name))
+    (table
+      (fieldlist (field (boolean))))))
 
 ==================
 Handles name key tables
@@ -207,13 +212,13 @@ x = { foo = bar, bar = baz }
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
-    (table_constructor 
-      (table_fields
-        (field (identifier) (identifier))
-        (field (identifier) (identifier))))))
+(chunk
+  (var_stmt
+    (var (name))
+    (table
+      (fieldlist
+        (field (name) (var (name)))
+        (field (name) (var (name)))))))
 
 ==================
 Handles expression key tables
@@ -223,10 +228,14 @@ x = { ["foo"] = bar, [call()] = baz }
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
-    (table_constructor 
-      (table_fields
-        (field (string) (identifier))
-        (field (function_call (identifier) (left_paren) (right_paren)) (identifier))))))
+(chunk
+  (var_stmt
+    (var (name))
+    (table
+      (fieldlist
+        (field (string) (var (name)))
+        (field
+          (call_stmt
+            (var (name))
+            (arglist))
+          (var (name)))))))

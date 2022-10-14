@@ -6,10 +6,8 @@ do end
 
 ---
 
-(program
-  (do_statement
-    (do_token)
-    (end_token)))
+(chunk
+  (do_stmt))
 
 ==================
 Do block with statement
@@ -19,13 +17,13 @@ do x = true end
 
 ---
 
-(program
-  (do_statement
-    (do_token)
-    (variable_assignment
-      (variable_declarator (identifier))
-      (boolean))
-    (end_token)))
+(chunk
+  (do_stmt
+    (block
+      (var_stmt
+        (var
+          (name))
+        (boolean)))))
 
 ==================
 Do block with multiple statements
@@ -39,20 +37,21 @@ end
 
 ---
 
-(program
-  (do_statement
-    (do_token)
-    (variable_assignment
-      (variable_declarator (identifier))
-      (boolean))
-    (variable_assignment
-      (variable_declarator (identifier))
-      (boolean))
-    (function_call
-      (identifier)
-      (left_paren)
-      (right_paren))
-    (end_token)))
+(chunk
+  (do_stmt
+    (block
+      (var_stmt
+        (var
+          (name))
+        (boolean))
+      (var_stmt
+        (var
+          (name))
+        (boolean))
+      (call_stmt
+        (var
+          (name))
+        (arglist)))))
 
 ==================
 Luau: Can use continue last statement
@@ -64,13 +63,11 @@ end
 
 ---
 
-(program
-  (if_statement
-    (if_token)
+(chunk
+  (if_stmt
     (boolean)
-    (then_token)
-    (continue_statement)
-    (end_token)))
+    (block
+      (continue_stmt))))
 
 ==================
 Luau: Continue is context sensitive
@@ -83,14 +80,12 @@ end
 
 ---
 
-(program
-  (if_statement
-    (if_token)
+(chunk
+  (if_stmt
     (boolean)
-    (then_token)
-    (local_assignment
-      (local_token)
-      (variable_declarator (identifier))
-      (boolean))
-    (continue_statement)
-    (end_token)))
+    (block
+      (local_var_stmt
+        (binding
+          (name))
+        (boolean))
+      (continue_stmt))))

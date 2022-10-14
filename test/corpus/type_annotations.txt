@@ -6,11 +6,10 @@ type Foo = string
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    name: (identifier)
-    type: (identifier)))
+(chunk
+  (type_stmt
+    (name)
+    (namedtype (name))))
 
 ==================
 Exported type declaration
@@ -20,12 +19,10 @@ export type Foo = string
 
 ---
 
-(program
-  (type_declaration
-    (export_token)
-    (type_token)
-    (identifier)
-    (identifier)))
+(chunk
+  (type_stmt
+    (name)
+    (namedtype (name))))
 
 ==================
 Generic type declaration
@@ -35,12 +32,11 @@ type Foo<T> = T
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    name: (identifier)
-    generics: (generics_declaration (identifier))
-    type: (identifier)))
+(chunk
+  (type_stmt
+    (name)
+    (generic (name))
+    (namedtype (name))))
 
 ==================
 Array type declaration
@@ -50,11 +46,10 @@ type Foo = { string }
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_array (identifier))))
+(chunk
+  (type_stmt
+    (name)
+    (tbtype (array (namedtype (name))))))
 
 ==================
 Module type declaration
@@ -64,11 +59,10 @@ type Foo = Promise.Result
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_module (identifier) (identifier))))
+(chunk
+  (type_stmt
+    (name)
+    (namedtype (name) (name))))
 
 ==================
 Type Declaration with generic type
@@ -78,14 +72,13 @@ type Foo = Map<string, number>
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_generic 
-      (identifier)
-      (identifier)
-      (identifier))))
+(chunk
+  (type_stmt
+    (name)
+    (namedtype
+      (name)
+      (typeparam (namedtype (name)))
+      (typeparam (namedtype (name))))))
 
 ==================
 Typeof type declaration
@@ -95,11 +88,10 @@ type Foo = typeof(Account)
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_typeof (identifier))))
+(chunk
+  (type_stmt
+    (name)
+    (dyntype (var (name)))))
 
 ==================
 Union type declaration
@@ -109,11 +101,10 @@ type Foo = string | number
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_union (identifier) (identifier))))
+(chunk
+  (type_stmt
+    (name)
+    (bintype (namedtype (name)) (namedtype (name)))))
 
 ==================
 Intersection type declaration
@@ -123,11 +114,10 @@ type Foo = string & number
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_intersection (identifier) (identifier))))
+(chunk
+  (type_stmt
+    (name)
+    (bintype (namedtype (name)) (namedtype (name)))))
 
 ==================
 Long union type declaration
@@ -137,13 +127,15 @@ type Foo = string | number | Foo | Bar
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_union 
-      (type_union (type_union (identifier) (identifier)) (identifier))
-      (identifier))))
+(chunk
+  (type_stmt
+    (name)
+    (bintype
+      (bintype
+        (bintype
+          (namedtype (name)) (namedtype (name)))
+        (namedtype (name)))
+      (namedtype (name)))))
     
 ==================
 Long intersection type declaration
@@ -153,16 +145,17 @@ type Foo = string & number & Foo & Bar
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_intersection 
-      (type_intersection (type_intersection (identifier) (identifier)) (identifier))
-      (identifier))))
+(chunk
+  (type_stmt
+    (name)
+    (bintype
+      (bintype
+        (bintype
+          (namedtype (name)) (namedtype (name)))
+        (namedtype (name)))
+      (namedtype (name)))))
 
 ==================
-
 Mixed union & intersection type declaration
 ==================
 
@@ -170,13 +163,15 @@ type Foo = string | number & Foo | Bar
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_union 
-      (type_union (identifier) (type_intersection (identifier) (identifier)))
-      (identifier))))
+(chunk
+  (type_stmt
+    (name)
+    (bintype
+      (bintype
+        (namedtype (name))
+        (bintype
+          (namedtype (name)) (namedtype (name))))
+      (namedtype (name)))))
 
 ==================
 Optional type declaration
@@ -186,11 +181,12 @@ type Foo = string?
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_optional (identifier))))
+(chunk
+  (type_stmt
+    (name)
+    (untype
+      (namedtype
+        (name)))))
 
 ==================
 Complex optional type declaration 1
@@ -200,11 +196,13 @@ type Foo = string | number?
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_union (identifier)  (type_optional (identifier)))))
+(chunk
+  (type_stmt
+    (name)
+    (bintype
+      (namedtype (name))
+      (untype
+        (namedtype (name))))))
 
 ==================
 Complex optional type declaration 2
@@ -214,13 +212,14 @@ type Foo = (string | number)?
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_optional 
-      (type_parentheses
-         (type_union (identifier) (identifier)))))) 
+(chunk
+  (type_stmt
+    (name)
+    (untype
+      (wraptype
+        (bintype
+          (namedtype (name))
+          (namedtype (name)))))))
 
 ==================
 Function type declaration 1
@@ -230,12 +229,12 @@ type Foo = () -> number
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_callback
-      (return_type (identifier)))))
+(chunk
+  (type_stmt
+    (name)
+    (fntype
+      (paramlist)
+      (namedtype (name)))))
 
 ==================
 Function type declaration 2
@@ -245,14 +244,14 @@ type Foo = (string, number) -> number
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_callback 
-      (type_callback_argument (identifier))
-      (type_callback_argument (identifier))
-      (return_type (identifier)))))
+(chunk
+  (type_stmt
+    (name)
+    (fntype
+      (paramlist
+        (namedtype (name))
+        (namedtype (name)))
+      (namedtype (name)))))
 
 ==================
 Function empty return type declaration
@@ -262,14 +261,14 @@ type Foo = (string, number) -> ()
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_callback 
-      (type_callback_argument (identifier))
-      (type_callback_argument (identifier))
-      (return_type (type_tuple)))))
+(chunk
+  (type_stmt
+    (name)
+    (fntype
+      (paramlist
+        (namedtype (name))
+        (namedtype (name)))
+      (typepack))))
 
 ==================
 Function multiple return type declaration
@@ -279,14 +278,16 @@ type Foo = (string, number) -> (number, string)
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_callback 
-      (type_callback_argument (identifier))
-      (type_callback_argument (identifier))
-      (return_type (type_tuple (identifier) (identifier))))))
+(chunk
+  (type_stmt
+    (name)
+    (fntype
+      (paramlist
+        (namedtype (name))
+        (namedtype (name)))
+      (typepack
+        (namedtype (name))
+        (namedtype (name))))))
 
 ==================
 Function variadic argument type declaration
@@ -296,14 +297,14 @@ type Foo = (string, ...number) -> ()
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_callback 
-      (type_callback_argument (identifier))
-      (type_callback_argument (type_variadic (identifier)))
-      (return_type (type_tuple)))))
+(chunk
+  (type_stmt
+    (name)
+    (fntype
+      (paramlist
+        (namedtype (name))
+        (variadic (namedtype (name))))
+      (typepack))))
 
 ==================
 Function variadic return type declaration
@@ -313,14 +314,14 @@ type Foo = (string, number) -> ...number
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_callback 
-      (type_callback_argument (identifier))
-      (type_callback_argument (identifier))
-      (return_type (type_variadic (identifier))))))
+(chunk
+  (type_stmt
+    (name)
+    (fntype
+      (paramlist
+        (namedtype (name))
+        (namedtype (name)))
+      (typepack (variadic (namedtype (name)))))))
 
 ==================
 Function named arg type declaration
@@ -330,14 +331,14 @@ type Foo = (string, count: number) -> string
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_callback 
-      (type_callback_argument (identifier))
-      (type_callback_argument (identifier) (identifier))
-      (return_type (identifier)))))
+(chunk
+  (type_stmt
+    (name)
+    (fntype
+      (paramlist
+        (namedtype (name))
+        (name) (namedtype (name)))
+      (namedtype (name)))))
 
 ==================
 Table type declaration
@@ -347,12 +348,12 @@ type Foo = { foo: string }
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_table
-      (type_table_field (identifier) (identifier)))))
+(chunk
+  (type_stmt
+    (name)
+    (tbtype
+      (name)
+      (namedtype (name)))))
 
 ==================
 Table type declaration with type index
@@ -362,12 +363,14 @@ type Foo = { [number]: string }
 
 ---
 
-(program
-  (type_declaration
-    (type_token)
-    (identifier)
-    (type_table
-      (type_table_field (identifier) (identifier)))))
+(chunk
+  (type_stmt
+    (name)
+    (tbtype
+      (namedtype
+        (name))
+      (namedtype
+        (name)))))
 
 ==================
 Local Assignment type specifier
@@ -377,11 +380,12 @@ local x: number = 3
 
 ---
 
-(program
-  (local_assignment
-    (local_token)
-    (variable_declarator (identifier) (type_specifier (identifier)))
-    (number)))
+(chunk
+  (local_var_stmt
+    (binding
+      (name)
+      (namedtype (name)))
+  (number)))
 
 ==================
 Multiple Local Assignment type specifier
@@ -391,12 +395,15 @@ local x: number, y, z: string = 3, nil, "foo"
 
 ---
 
-(program
-  (local_assignment
-    (local_token)
-    (variable_declarator (identifier) (type_specifier (identifier)))
-    (variable_declarator (identifier))
-    (variable_declarator (identifier) (type_specifier (identifier)))
+(chunk
+  (local_var_stmt
+    (binding
+      (name)
+      (namedtype (name)))
+    (binding (name))
+    (binding
+      (name)
+      (namedtype (name)))
     (number)
     (nil)
     (string)))
@@ -410,14 +417,11 @@ end
 
 ---
 
-(program
-  (function_declaration
-    (function_token)
-    (function_name (identifier))
-    (left_paren)
-    (right_paren)
-    (return_type (identifier))
-    (end_token)))
+(chunk
+  (fn_stmt
+    (name)
+    (namedtype
+      (name))))
 
 ==================
 Function declaration parameter types
@@ -428,16 +432,14 @@ end
 
 ---
 
-(program
-  (function_declaration
-    (function_token)
-    (function_name (identifier))
-    (left_paren)
-    (parameter_list 
-      (parameter (identifier))
-      (parameter (identifier) (type_specifier (identifier))))
-    (right_paren)
-    (end_token)))
+(chunk
+  (fn_stmt
+    (name)
+    (param (name))
+    (param
+      (name)
+      (namedtype
+        (name)))))
 
 ==================
 Function declaration ellipse type
@@ -448,17 +450,18 @@ end
 
 ---
 
-(program
-  (function_declaration
-    (function_token)
-    (function_name (identifier))
-    (left_paren)
-    (parameter_list 
-      (parameter (identifier))
-      (parameter (identifier) (type_specifier (identifier)))
-      (parameter (ellipse) (type_specifier (identifier))))
-    (right_paren)
-    (end_token)))
+(chunk
+  (fn_stmt
+    (name)
+    (param (name))
+    (param
+      (name)
+      (namedtype
+        (name)))
+    (param
+      (vararg)
+      (namedtype
+        (name)))))
 
 ==================
 Generic function declaration
@@ -469,14 +472,13 @@ end
 
 ---
 
-(program
-  (function_declaration
-    (function_token)
-    (function_name (identifier))
-    (generics_declaration (identifier) (identifier))
-    (left_paren)
-    (right_paren)
-    (end_token)))
+(chunk
+  (fn_stmt
+    (name)
+    (generic
+      (name))
+    (generic
+      (name))))
 
 ==================
 Numeric for loop type specifier
@@ -487,12 +489,14 @@ end
 
 ---
 
-(program
-  (numeric_for_statement
-    (variable_declarator (identifier) (type_specifier (identifier)))
+(chunk
+  (for_range_stmt
+    (binding
+      (name)
+      (namedtype
+        (name)))
     (number)
-    (number)
-    (end_token)))
+    (number)))
 
 ==================
 Generic for loop type specifier
@@ -503,12 +507,18 @@ end
 
 ---
 
-(program
-  (generic_for_statement
-    (variable_declarator (identifier) (type_specifier (identifier)))
-    (variable_declarator (identifier) (type_specifier (identifier)))
-    (function_call (identifier) (left_paren) (function_arguments (identifier)) (right_paren))
-    (end_token)))
+(chunk
+  (for_in_stmt
+    (binding
+      (name)
+      (namedtype (name)))
+    (binding
+      (name)
+      (namedtype (name)))
+    (call_stmt
+      (var (name))
+      (arglist
+        (var (name))))))
 
 ==================
 Type assertion 1 
@@ -518,9 +528,11 @@ x = 5 + c :: number
 
 ---
 
-(program
-  (variable_assignment
-    (variable_declarator (identifier))
-    (binary_expression
+(chunk
+  (var_stmt
+    (var (name))
+    (binexp
       (number)
-      (type_assertion (identifier) (identifier)))))
+      (cast
+        (var (name))
+        (namedtype (name))))))
