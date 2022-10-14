@@ -171,11 +171,6 @@
     }
   },
   {
-    "type": "assign",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "binding",
     "named": true,
     "fields": {
@@ -422,19 +417,39 @@
         ]
       },
       "invoked": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
-            "type": "call_stmt",
+            "type": ":",
+            "named": false
+          },
+          {
+            "type": "name",
             "named": true
           },
           {
-            "type": "exp_wrap",
+            "type": "prefixexp",
             "named": true
-          },
+          }
+        ]
+      },
+      "method": {
+        "multiple": false,
+        "required": false,
+        "types": [
           {
-            "type": "var",
+            "type": "name",
+            "named": true
+          }
+        ]
+      },
+      "table": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "prefixexp",
             "named": true
           }
         ]
@@ -471,6 +486,16 @@
         "types": [
           {
             "type": "parlist",
+            "named": true
+          }
+        ]
+      },
+      "return_type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type",
             "named": true
           }
         ]
@@ -659,6 +684,16 @@
           }
         ]
       },
+      "field": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "name",
+            "named": true
+          }
+        ]
+      },
       "generics": {
         "multiple": false,
         "required": false,
@@ -669,16 +704,30 @@
           }
         ]
       },
-      "name": {
+      "method": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "name",
             "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": ".",
+            "named": false
           },
           {
-            "type": "var",
+            "type": ":",
+            "named": false
+          },
+          {
+            "type": "name",
             "named": true
           }
         ]
@@ -689,6 +738,30 @@
         "types": [
           {
             "type": "parlist",
+            "named": true
+          }
+        ]
+      },
+      "return_type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type",
+            "named": true
+          }
+        ]
+      },
+      "table": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ".",
+            "named": false
+          },
+          {
+            "type": "name",
             "named": true
           }
         ]
@@ -882,6 +955,16 @@
         "types": [
           {
             "type": "parlist",
+            "named": true
+          }
+        ]
+      },
+      "return_type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type",
             "named": true
           }
         ]
@@ -1385,7 +1468,7 @@
     "named": true,
     "fields": {
       "field": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -1398,26 +1481,36 @@
           }
         ]
       },
-      "method": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "name",
-            "named": true
-          }
-        ]
-      },
       "table": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
-            "type": "name",
+            "type": ".",
+            "named": false
+          },
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
+            "named": false
+          },
+          {
+            "type": "call_stmt",
             "named": true
           },
           {
-            "type": "prefixexp",
+            "type": "exp",
+            "named": true
+          },
+          {
+            "type": "exp_wrap",
+            "named": true
+          },
+          {
+            "type": "name",
             "named": true
           }
         ]
@@ -1442,10 +1535,6 @@
       "multiple": true,
       "required": true,
       "types": [
-        {
-          "type": "assign",
-          "named": true
-        },
         {
           "type": "explist",
           "named": true

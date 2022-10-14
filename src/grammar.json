@@ -188,13 +188,8 @@
                 "name": "name"
               },
               {
-                "type": "ALIAS",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "_tbl_fn_member"
-                },
-                "named": true,
-                "value": "var"
+                "type": "SYMBOL",
+                "name": "_tbl_fn_member"
               }
             ]
           }
@@ -238,13 +233,8 @@
             "name": "name"
           },
           {
-            "type": "ALIAS",
-            "content": {
-              "type": "SYMBOL",
-              "name": "_tbl_field_named"
-            },
-            "named": true,
-            "value": "var"
+            "type": "SYMBOL",
+            "name": "_tbl_field_named"
           }
         ]
       }
@@ -769,7 +759,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "assign"
+          "name": "_assign"
         },
         {
           "type": "ALIAS",
@@ -1075,7 +1065,7 @@
         }
       ]
     },
-    "assign": {
+    "_assign": {
       "type": "CHOICE",
       "members": [
         {
@@ -2064,13 +2054,8 @@
                 "name": "_prefixexp"
               },
               {
-                "type": "ALIAS",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "_tbl_method"
-                },
-                "named": true,
-                "value": "var"
+                "type": "SYMBOL",
+                "name": "_tbl_method"
               }
             ]
           }
@@ -2247,13 +2232,8 @@
                 "name": "name"
               },
               {
-                "type": "ALIAS",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "_tbl_var"
-                },
-                "named": true,
-                "value": "var"
+                "type": "SYMBOL",
+                "name": "_tbl_var"
               },
               {
                 "type": "SYMBOL",
@@ -2387,6 +2367,31 @@
         {
           "type": "STRING",
           "value": ")"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": ":"
+                },
+                {
+                  "type": "FIELD",
+                  "name": "return_type",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "type"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "CHOICE",

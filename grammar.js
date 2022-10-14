@@ -78,10 +78,10 @@ module.exports = grammar({
       "function",
       field(
         "name",
-        choice($.name, alias($._tbl_fn_member, $.var))),
+        choice($.name, $._tbl_fn_member)),
       $._fn_body),
     _tbl_fn_member: $ => seq($._tbl_ident, choice($._field_named, $._method_name)),
-    _tbl_ident: $ => field("table", choice($.name, alias($._tbl_field_named, $.var))),
+    _tbl_ident: $ => field("table", choice($.name, $._tbl_field_named)),
     _tbl_field_named: $ => seq($._tbl_ident, $._field_named),
 
     for_in_stmt: $ => seq(
@@ -128,7 +128,7 @@ module.exports = grammar({
       optional(seq("=", $.explist))),
 
     var_stmt: $ => seq(
-      $.varlist, $.assign, alias($._v_list, $.explist)),
+      $.varlist, $._assign, alias($._v_list, $.explist)),
     varlist: $ => _list_strict($.var, ","),
 
     type_stmt: $ => seq(
@@ -148,7 +148,7 @@ module.exports = grammar({
     _type_stmt_pack: $ => seq(field("genpack", $.name), "...", optional(seq("=", $.typepack))),
     _type_stmt_packlist: $ => _list_strict($._type_stmt_pack, ","),
 
-    assign: $ => choice(
+    _assign: $ => choice(
       "=",
       "+=",
       "-=",
@@ -225,7 +225,7 @@ module.exports = grammar({
     call_stmt: $ => seq(
       field("invoked", choice(
         $._prefixexp,
-        alias($._tbl_method, $.var))),
+        $._tbl_method)),
       field("arglist", $.arglist)),
     _tbl_method: $ => seq(field("table", $.prefixexp), $._method_name),
     _method_name: $ => seq(":", field("method", $.name)),
@@ -244,7 +244,7 @@ module.exports = grammar({
     _tbl_var: $ => seq(
       field("table", choice(
         $.name,
-        alias($._tbl_var, $.var),
+        $._tbl_var,
         $.call_stmt,
         $.exp_wrap)),
       choice($._field_indexed, $._field_named)),
@@ -255,6 +255,7 @@ module.exports = grammar({
     _fn_body: $ => seq(
       optional(seq("<", field("generics", $.typegenlist), ">")),
       "(", optional(field("parameters", $.parlist)), ")",
+      optional(seq(":", field("return_type", $.type))),
       optional(field("body", $.block)),
       "end"),
     parlist: $ => choice(
