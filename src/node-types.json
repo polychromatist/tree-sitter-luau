@@ -189,27 +189,20 @@
   {
     "type": "binding",
     "named": true,
-    "fields": {
-      "annotation": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "type",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "name",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "name",
+          "named": true
+        },
+        {
+          "type": "type",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -372,16 +365,6 @@
     "type": "call_stmt",
     "named": true,
     "fields": {
-      "arglist": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "arglist",
-            "named": true
-          }
-        ]
-      },
       "invoked": {
         "multiple": true,
         "required": true,
@@ -420,6 +403,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "arglist",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -694,17 +687,9 @@
         ]
       },
       "name": {
-        "multiple": true,
-        "required": true,
+        "multiple": false,
+        "required": false,
         "types": [
-          {
-            "type": ".",
-            "named": false
-          },
-          {
-            "type": ":",
-            "named": false
-          },
           {
             "type": "name",
             "named": true
@@ -790,30 +775,6 @@
     "type": "for_in_stmt",
     "named": true,
     "fields": {
-      "binding": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "binding",
-            "named": true
-          }
-        ]
-      },
-      "bindings": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "binding",
-            "named": true
-          }
-        ]
-      },
       "body": {
         "multiple": false,
         "required": false,
@@ -823,47 +784,27 @@
             "named": true
           }
         ]
-      },
-      "iterator": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "exp",
-            "named": true
-          }
-        ]
-      },
-      "value": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "exp",
-            "named": true
-          }
-        ]
       }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "binding",
+          "named": true
+        },
+        {
+          "type": "exp",
+          "named": true
+        }
+      ]
     }
   },
   {
     "type": "for_range_stmt",
     "named": true,
     "fields": {
-      "binding": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "binding",
-            "named": true
-          }
-        ]
-      },
       "body": {
         "multiple": false,
         "required": false,
@@ -874,17 +815,7 @@
           }
         ]
       },
-      "max": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "exp",
-            "named": true
-          }
-        ]
-      },
-      "min": {
+      "start": {
         "multiple": false,
         "required": true,
         "types": [
@@ -903,7 +834,27 @@
             "named": true
           }
         ]
+      },
+      "stop": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "binding",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1005,16 +956,6 @@
           }
         ]
       },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "name",
-            "named": true
-          }
-        ]
-      },
       "return_type": {
         "multiple": false,
         "required": false,
@@ -1028,7 +969,7 @@
     },
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "generic",
@@ -1036,6 +977,10 @@
         },
         {
           "type": "genpack",
+          "named": true
+        },
+        {
+          "type": "name",
           "named": true
         },
         {
@@ -1097,32 +1042,15 @@
   {
     "type": "param",
     "named": true,
-    "fields": {
-      "annotation": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "type",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "name",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
+        {
+          "type": "name",
+          "named": true
+        },
         {
           "type": "type",
           "named": true

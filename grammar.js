@@ -50,7 +50,7 @@ module.exports = grammar({
     _block: $ => 
       choice(
         $.ret_stmt,
-        seq(repeat1($.statement), optional($.ret_stmt))
+        seq(repeat1(seq($.statement, optional(";"))), optional($.ret_stmt))
       ),
 
     ret_stmt: $ => seq("return", optional($._explist), optional(";")),
@@ -73,29 +73,27 @@ module.exports = grammar({
         $.type_stmt
       ),
 
-    local_fn_stmt: $ => seq("local", "function", field("name", $.name), $._fn_body),
+    local_fn_stmt: $ => seq("local", "function", $.name, $._fn_body),
 
     fn_stmt: $ => seq(
       "function",
-      field(
-        "name",
-        choice($.name, $._tbl_fn_member)),
+      choice(field("name", $.name), $._tbl_fn_member),
       $._fn_body),
     _tbl_fn_member: $ => seq($._tbl_ident, choice($._field_named, $._method_name)),
     _tbl_ident: $ => field("table", choice($.name, $._tbl_field_named)),
     _tbl_field_named: $ => seq($._tbl_ident, $._field_named),
 
     for_in_stmt: $ => seq(
-      "for", field("bindings", $._b_list),
-      "in", field("iterator", $._v_list),
+      "for", $._bindinglist,
+      "in", $._explist,
       "do", optional(field("body", $.block)), "end"),
-    _b_list: $ => _list_strict(field("binding", $.binding), ","),
-    _v_list: $ => _list_strict(field("value", $.exp), ","),
+    //_b_list: $ => _list_strict(field("binding", $.binding), ","),
+    //_v_list: $ => _list_strict(field("value", $.exp), ","),
 
     for_range_stmt: $ => seq(
-      "for", field("binding", $.binding),
-      "=", field("min", $.exp),
-      ",", field("max", $.exp),
+      "for", $.binding,
+      "=", field("start", $.exp),
+      ",", field("stop", $.exp),
       optional(seq(",", field("step", $.exp))),
       "do", optional(field("body", $.block)), "end"),
 
@@ -227,7 +225,7 @@ module.exports = grammar({
       field("invoked", choice(
         $._prefixexp,
         $._tbl_method)),
-      field("arglist", $.arglist)),
+      $.arglist),
     _tbl_method: $ => seq(field("table", $.prefixexp), $._method_name),
     _method_name: $ => seq(":", field("method", $.name)),
     arglist: $ => choice(
@@ -236,8 +234,8 @@ module.exports = grammar({
       $.string),
 
     binding: $ => seq(
-      field("name", $.name),
-      optional(seq(":", field("annotation", $.type)))),
+      $.name,
+      optional(seq(":", $.type))),
 
     _bindinglist: $ => _list_strict($.binding, ","),
 

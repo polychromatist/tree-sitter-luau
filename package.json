@@ -22,7 +22,8 @@
       "scope": "source.luau",
       "file-types": [
         "luau"
-      ]
+      ],
+      "first-line-regex": "--!(?:strict|nonstrict|nocheck)$"
     }
   ]
 }
