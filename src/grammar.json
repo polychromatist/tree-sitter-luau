@@ -110,11 +110,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "local_var_stmt"
+          "name": "call_stmt"
         },
         {
           "type": "SYMBOL",
-          "name": "call_stmt"
+          "name": "local_var_stmt"
         },
         {
           "type": "SYMBOL",
@@ -756,31 +756,6 @@
           }
         },
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "FIELD",
-                  "name": "module",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "name"
-                  }
-                },
-                {
-                  "type": "STRING",
-                  "value": "."
-                }
-              ]
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
           "type": "SYMBOL",
           "name": "name"
         },
@@ -819,7 +794,7 @@
         }
       ]
     },
-    "_type_stmt_gen": {
+    "genericdef": {
       "type": "SEQ",
       "members": [
         {
@@ -860,7 +835,7 @@
               "members": [
                 {
                   "type": "SYMBOL",
-                  "name": "_type_stmt_gen"
+                  "name": "genericdef"
                 },
                 {
                   "type": "REPEAT",
@@ -873,7 +848,7 @@
                       },
                       {
                         "type": "SYMBOL",
-                        "name": "_type_stmt_gen"
+                        "name": "genericdef"
                       }
                     ]
                   }
@@ -909,7 +884,7 @@
         }
       ]
     },
-    "_type_stmt_pack": {
+    "genpackdef": {
       "type": "SEQ",
       "members": [
         {
@@ -944,7 +919,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "_type_stmt_pack"
+          "name": "genpackdef"
         },
         {
           "type": "REPEAT",
@@ -957,7 +932,7 @@
               },
               {
                 "type": "SYMBOL",
-                "name": "_type_stmt_pack"
+                "name": "genpackdef"
               }
             ]
           }
@@ -1708,6 +1683,10 @@
           "value": "then"
         },
         {
+          "type": "SYMBOL",
+          "name": "exp"
+        },
+        {
           "type": "REPEAT",
           "content": {
             "type": "SYMBOL",
@@ -1738,6 +1717,10 @@
         {
           "type": "STRING",
           "value": "then"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "exp"
         }
       ]
     },
@@ -1947,21 +1930,21 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "FIELD",
-          "name": "invoked",
-          "content": {
-            "type": "CHOICE",
-            "members": [
-              {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "invoked",
+              "content": {
                 "type": "SYMBOL",
                 "name": "_prefixexp"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "_tbl_method"
               }
-            ]
-          }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_tbl_method"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
@@ -2265,8 +2248,17 @@
                   "type": "FIELD",
                   "name": "return_type",
                   "content": {
-                    "type": "SYMBOL",
-                    "name": "type"
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "typepack"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "type"
+                      }
+                    ]
                   }
                 }
               ]
@@ -2765,11 +2757,11 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "type"
+              "name": "typepack"
             },
             {
               "type": "SYMBOL",
-              "name": "typepack"
+              "name": "type"
             }
           ]
         }

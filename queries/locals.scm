@@ -42,22 +42,18 @@
   (name) @definition.function)
 
 (fn_stmt
-  table: (name)
-  . (_)* @definition.associated
-  field: (name) @definition.function .)
+  field: (name) @definition.function (_) !field)
   (#set! definition.method.scope "parent")
 
 (fn_stmt
-  table: (name)
-  . (_)* @definition.associated
-  method (name) @definition.function .)
+  method: (name) @definition.function)
   (#set! definition.method.scope "parent")
 
 (for_in_stmt
   (binding (name) @definition.var))
 
 (for_range_stmt
-  (binding . (name) @definition.var))
+  . (binding (name) @definition.var))
 
 (param (name) @definition.parameter)
 

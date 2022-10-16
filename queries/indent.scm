@@ -9,6 +9,7 @@
   (for_in_stmt)
   (for_range_stmt)
   (table)
+  (tbtype)
   (arglist)
 ] @indent
 
@@ -29,7 +30,7 @@
  ")"
  "elseif"
  (elseif_clause)
- "else",
+ "else"
  (else_clause)
 ] @branch
 

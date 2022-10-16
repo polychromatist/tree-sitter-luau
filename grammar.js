@@ -58,8 +58,8 @@ module.exports = grammar({
     statement: $ =>
       choice(
         $.var_stmt,
-        $.local_var_stmt,
         $.call_stmt,
+        $.local_var_stmt,
         $.break_stmt,
         $.continue_stmt,
         $.do_stmt,
@@ -129,20 +129,20 @@ module.exports = grammar({
     type_stmt: $ => seq(
       optional(seq("export", token.immediate(" "))),
       "type", token.immediate(" "),
-      optional(seq(field("module", $.name), ".")),
+      //optional(seq(field("module", $.name), ".")),
       $.name,
       optional(seq("<", $._type_stmt_genlist, ">")),
       "=",
       $.type
     ),
-    _type_stmt_gen: $ => seq($.generic, optional(seq("=", $.type))),
-    _type_stmt_genlist: $ => _list_vrd($._type_stmt_gen, $._type_stmt_packlist, ","),
+    genericdef: $ => seq($.generic, optional(seq("=", $.type))),
+    _type_stmt_genlist: $ => _list_vrd($.genericdef, $._type_stmt_packlist, ","),
     /*
     _type_stmt_genlist: $ => choice(
       seq(_list_strict($._type_stmt_gen, ","), optional(seq(",", $._type_stmt_packlist))),
       $._type_stmt_packlist),*/
-    _type_stmt_pack: $ => seq($.genpack, optional(seq("=", $.typepack))),
-    _type_stmt_packlist: $ => _list_strict($._type_stmt_pack, ","),
+    genpackdef: $ => seq($.genpack, optional(seq("=", $.typepack))),
+    _type_stmt_packlist: $ => _list_strict($.genpackdef, ","),
 
     _assign: $ => choice(
       "=",
@@ -200,10 +200,10 @@ module.exports = grammar({
       ...["not", "#", "-"].map(op =>
         prec.left(PREC.UNARY, seq(field("op", op), field("arg", $.exp))))),
 
-    ifexp: $ => seq("if", $.exp, "then",
+    ifexp: $ => seq("if", $.exp, "then", $.exp,
       repeat($._ifexp_elseif),
       "else", $.exp),
-    _ifexp_elseif: $ => seq("elseif", $.exp, "then"),
+    _ifexp_elseif: $ => seq("elseif", $.exp, "then", $.exp),
 
     table: $ => seq("{", optional($.fieldlist), "}"),
     fieldlist: $ =>
@@ -222,9 +222,9 @@ module.exports = grammar({
     exp_wrap: $ => seq("(", $.exp, ")"),
 
     call_stmt: $ => seq(
-      field("invoked", choice(
-        $._prefixexp,
-        $._tbl_method)),
+      choice(
+        field("invoked", $._prefixexp),
+        $._tbl_method),
       $.arglist),
     _tbl_method: $ => seq(field("table", $.prefixexp), $._method_name),
     _method_name: $ => seq(":", field("method", $.name)),
@@ -254,7 +254,7 @@ module.exports = grammar({
     _fn_body: $ => seq(
       optional(seq("<", $._genlist, ">")),
       "(", optional($._paramlist), ")",
-      optional(seq(":", field("return_type", $.type))),
+      optional(seq(":", field("return_type", choice($.typepack, $.type)))),
       optional(field("body", $.block)),
       "end"),
     _paramlist: $ => _list_vrd(alias($.binding, $.param), alias($._param_vararg, $.param), ","),
@@ -316,7 +316,7 @@ module.exports = grammar({
     fntype: $ => seq(
       optional($._fntype_gen),
       alias($._fntype_wrap, $.paramlist),
-      choice($.type, $.typepack)),
+      choice($.typepack, $.type)),
     _fntype_gen: $ => seq("<", $._genlist, ">"),
     _fntype_wrap: $ => prec.dynamic(0, seq("(", optional($._fntype_paramlist), ")", "->")),
     _fntype_param: $ => seq(optional(seq(field("param_name", $.name), ":")), $.type),
@@ -386,7 +386,7 @@ module.exports = grammar({
   supertypes: $ => [$.prefixexp, $.exp, $.statement, $.type],
   conflicts: $ => [
     [$._fntype_param, $._typelist             ],
-    [$._fntype_param,               $.wraptype],
+    [$._fntype_param,              $.wraptype],
     [$._fntype_param, $._typelist,  $.wraptype],
 
     [$._typelist_vrd, $._typepack_vrd]],

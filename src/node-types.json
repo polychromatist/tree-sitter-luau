@@ -366,19 +366,19 @@
     "named": true,
     "fields": {
       "invoked": {
-        "multiple": true,
-        "required": true,
+        "multiple": false,
+        "required": false,
         "types": [
           {
-            "type": ":",
-            "named": false
-          },
-          {
-            "type": "name",
+            "type": "call_stmt",
             "named": true
           },
           {
-            "type": "prefixexp",
+            "type": "exp_wrap",
+            "named": true
+          },
+          {
+            "type": "var",
             "named": true
           }
         ]
@@ -435,6 +435,10 @@
         "types": [
           {
             "type": "type",
+            "named": true
+          },
+          {
+            "type": "typepack",
             "named": true
           }
         ]
@@ -703,6 +707,10 @@
           {
             "type": "type",
             "named": true
+          },
+          {
+            "type": "typepack",
+            "named": true
           }
         ]
       },
@@ -873,6 +881,25 @@
     }
   },
   {
+    "type": "genericdef",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "generic",
+          "named": true
+        },
+        {
+          "type": "type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "genpack",
     "named": true,
     "fields": {},
@@ -882,6 +909,25 @@
       "types": [
         {
           "type": "generic",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "genpackdef",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "genpack",
+          "named": true
+        },
+        {
+          "type": "typepack",
           "named": true
         }
       ]
@@ -962,6 +1008,10 @@
         "types": [
           {
             "type": "type",
+            "named": true
+          },
+          {
+            "type": "typepack",
             "named": true
           }
         ]
@@ -1225,28 +1275,17 @@
   {
     "type": "type_stmt",
     "named": true,
-    "fields": {
-      "module": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "name",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": true,
       "required": true,
       "types": [
         {
-          "type": "generic",
+          "type": "genericdef",
           "named": true
         },
         {
-          "type": "genpack",
+          "type": "genpackdef",
           "named": true
         },
         {
@@ -1255,10 +1294,6 @@
         },
         {
           "type": "type",
-          "named": true
-        },
-        {
-          "type": "typepack",
           "named": true
         }
       ]
