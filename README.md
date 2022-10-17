@@ -29,3 +29,67 @@ WIP
   au BufRead,BufNewFile *.luau        set filetype=luau
   ```
   - copy `.\queries\` folder's content (from this project) to `after\queries\luau`
+
+## deploying [luau-lsp](https://github.com/johnnymorganz/luau-lsp) for high quality linting
+
+1. download or compile `luau-lsp`: https://github.com/JohnnyMorganz/luau-lsp/releases
+2. make sure you have either an `aftman.toml`, `wally.toml`, or `default.project.json` file in the project root
+3. modify this lsp config skeleton & put in init.lua file:
+  ```lua
+local MY_LUAU_LSP_PATH = "C:\\bin\\luau-lsp.exe"
+local MY_DIAGNOSTIC_KEY = "<C-N>" -- ctrl N
+local MY_LOOKUP_KEY = "K" -- shift K
+
+-- LSP Diagnostics Options Setup 
+local sign = function(opts)
+  vim.fn.sign_define(opts.name, {
+    texthl = opts.name,
+    text = opts.text,
+    numhl = ''
+  })
+end
+
+sign({name = 'DiagnosticSignError', text = ''})
+sign({name = 'DiagnosticSignWarn', text = ''})
+sign({name = 'DiagnosticSignHint', text = ''})
+sign({name = 'DiagnosticSignInfo', text = ''})
+
+vim.diagnostic.config({
+    virtual_text = false,
+    signs = true,
+    update_in_insert = true,
+    underline = true,
+    severity_sort = false,
+    float = {
+        border = 'rounded',
+        source = 'always',
+        header = '',
+        prefix = '',
+    },
+})
+
+-- overwrite keymap on LSP enabled buffers
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    vim.keymap.set('n', MY_LOOKUP_KEY, vim.lsp.buf.hover, { buffer = args.buf })
+    vim.keymap.set('n', MY_DIAGNOSTIC_KEY, function()
+      vim.diagnostic.open_float(nil, { focusable = false })
+    end, {buffer = true})
+  end
+})
+
+-- autocmd-event LSP Server Start Callback
+function _G.start_luau_lsp()
+  vim.lsp.start({
+    name = 'nvim-luau-lsp',
+    cmd = {MY_LUAU_LSP_PATH, 'lsp'},
+    root_dir = vim.fs.dirname(vim.fs.find({'aftman.toml', 'wally.toml', 'default.project.json'}, { upward = true })[1])
+  })
+end
+
+-- enable signcolumn and register autocmd-event
+vim.cmd([[
+set signcolumn=yes
+au BufRead,BufNewFile *.luau lua _G.start_luau_lsp()
+]])
+```
