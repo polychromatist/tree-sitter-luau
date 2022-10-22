@@ -116,6 +116,6 @@ roots = [ "aftman.toml", "default.project.json", "wally.toml" ]
 name = "luau"
 source = { git = "https://github.com/polychromatist/tree-sitter-luau" }
 ```
-3. run `.\scripts\helix_clone_queries.ps1` (or manually clone from `.\helix-queries\` into `<helix-config>\runtime\queries\luau`)
+3. run `.\scripts\clone_helix_queries.ps1` (or manually clone from `.\helix-queries\` into `<helix-config>\runtime\queries\luau`)
 4. run `hx --build fetch` && `hx --build grammar`
 
