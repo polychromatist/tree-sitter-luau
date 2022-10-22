@@ -77,11 +77,18 @@ module.exports = grammar({
 
     fn_stmt: $ => seq(
       "function",
-      choice(field("name", $.name), $._tbl_fn_member),
+      choice(
+        field("name", $.name),
+        seq(field("table", $.name), $._tbl_fn_member)),
       $._fn_body),
-    _tbl_fn_member: $ => seq($._tbl_ident, choice($._field_named, $._method_name)),
-    _tbl_ident: $ => field("table", choice($.name, $._tbl_field_named)),
-    _tbl_field_named: $ => seq($._tbl_ident, $._field_named),
+    _tbl_fn_member: $ => choice(
+      seq(".", field("name", $.name)),
+      seq(alias($._tbl_fn_field, $.field), $._tbl_fn_member),
+      seq(":", field("method", $.name))),
+    _tbl_fn_field: $ => seq(".", $.name),
+    //_tbl_fn_member: $ => seq($._tbl_ident, choice($._field_named, $._method_name)),
+    //_tbl_ident: $ => choice($.name, $._tbl_field_named),
+    //_tbl_field_named: $ => seq($._tbl_ident, $._field_named),
 
     for_in_stmt: $ => seq(
       "for", $._bindinglist,

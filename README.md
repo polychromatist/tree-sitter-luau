@@ -28,7 +28,7 @@ WIP
   ```vim
   au BufRead,BufNewFile *.luau        set filetype=luau
   ```
-  - copy `.\queries\` folder's content (from this project) to `after\queries\luau`
+  - copy `.\nvim-queries\` folder's content (from this project) to `after\queries\luau`
 
 ## deploying [luau-lsp](https://github.com/johnnymorganz/luau-lsp) for high quality linting
 
@@ -93,3 +93,29 @@ set signcolumn=yes
 au BufRead,BufNewFile *.luau lua _G.start_luau_lsp()
 ]])
 ```
+
+## deploying in [helix editor](https://github.com/helix-editor/helix)
+
+helix editor has dedicated support for tree-sitter and is extensible through
+its `languages.toml` file. here's a rough sketch for the setup on Windows.
+
+1. create the `languages.toml` file if it doesn't already exist ([docs](https://docs.helix-editor.com/languages.html))
+2. append two entries inside `languages.toml`:
+```toml
+[[language]]
+name = "luau"
+scope = "source.luau"
+injection-regex = "^luau$"
+file-types = ["luau", "server.lua", "client.lua"]
+comment-token = "--"
+indent = { tab-width = 2, unit = "  "}
+# language-server = { command = "luau-lsp", args = ["lsp", "--definitions=<path-to-robloxTypes.d.lua>"] }
+roots = [ "aftman.toml", "default.project.json", "wally.toml" ]
+
+[[grammar]]
+name = "luau"
+source = { git = "https://github.com/polychromatist/tree-sitter-luau" }
+```
+3. run `.\scripts\helix_clone_queries.ps1` (or manually clone from `.\helix-queries\` into `<helix-config>\runtime\queries\luau`)
+4. run `hx --build fetch` && `hx --build grammar`
+

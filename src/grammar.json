@@ -202,8 +202,21 @@
               }
             },
             {
-              "type": "SYMBOL",
-              "name": "_tbl_fn_member"
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "FIELD",
+                  "name": "table",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "name"
+                  }
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_tbl_fn_member"
+                }
+              ]
             }
           ]
         },
@@ -214,54 +227,72 @@
       ]
     },
     "_tbl_fn_member": {
-      "type": "SEQ",
+      "type": "CHOICE",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "_tbl_ident"
-        },
-        {
-          "type": "CHOICE",
+          "type": "SEQ",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "_field_named"
+              "type": "STRING",
+              "value": "."
+            },
+            {
+              "type": "FIELD",
+              "name": "name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "name"
+              }
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_tbl_fn_field"
+              },
+              "named": true,
+              "value": "field"
             },
             {
               "type": "SYMBOL",
-              "name": "_method_name"
+              "name": "_tbl_fn_member"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": ":"
+            },
+            {
+              "type": "FIELD",
+              "name": "method",
+              "content": {
+                "type": "SYMBOL",
+                "name": "name"
+              }
             }
           ]
         }
       ]
     },
-    "_tbl_ident": {
-      "type": "FIELD",
-      "name": "table",
-      "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "name"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "_tbl_field_named"
-          }
-        ]
-      }
-    },
-    "_tbl_field_named": {
+    "_tbl_fn_field": {
       "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "_tbl_ident"
+          "type": "STRING",
+          "value": "."
         },
         {
           "type": "SYMBOL",
-          "name": "_field_named"
+          "name": "name"
         }
       ]
     },

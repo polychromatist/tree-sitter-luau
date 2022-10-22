@@ -631,7 +631,7 @@
       },
       "value": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "exp",
@@ -639,6 +639,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "name",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -666,16 +676,6 @@
         "types": [
           {
             "type": "block",
-            "named": true
-          }
-        ]
-      },
-      "field": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "name",
             "named": true
           }
         ]
@@ -715,13 +715,9 @@
         ]
       },
       "table": {
-        "multiple": true,
+        "multiple": false,
         "required": false,
         "types": [
-          {
-            "type": ".",
-            "named": false
-          },
           {
             "type": "name",
             "named": true
@@ -733,6 +729,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "field",
+          "named": true
+        },
         {
           "type": "generic",
           "named": true

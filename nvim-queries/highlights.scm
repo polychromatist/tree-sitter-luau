@@ -190,11 +190,12 @@
 
 (param (name) @parameter)
 
-(call_stmt . invoked: (var (name) @function.call !table) (arglist))
-(call_stmt invoked: (var field: (name) @function.call) . (arglist))
+;(call_stmt . invoked: (var (name) @function.call !table) (arglist))
+;(call_stmt invoked: (var field: (name) @function.call) . (arglist))
+(call_stmt invoked: (var (name) @function.call .))
 (call_stmt method: (name) @method.call)
 (fn_stmt name: (name) @function)
-(fn_stmt field: (name) @function . (_ !field))
+;(fn_stmt field: (name) @function . (_ !field))
 (fn_stmt method: (name) @method)
 (local_fn_stmt (name) @function)
 

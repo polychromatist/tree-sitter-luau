@@ -1,10 +1,13 @@
 node_modules/
 *.swp
-/parser.exp
-/parser.obj
-/parser.lib
-/scanner.obj
+*.exp
+*.obj
+*.lib
+*.exe
 /package-lock.json
 /build
 /target
 /outfile.txt
+queries/
+/*.luau
+/aftman.toml

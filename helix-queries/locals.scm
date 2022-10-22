@@ -18,49 +18,45 @@
  (fn_stmt)
  (local_fn_stmt)
  (callback)
-] @scope
+] @local.scope
 
 ; Definitions
 
 (var_stmt
-  (var (name) @definition.var))
+  (var (name) @local.definition))
 
 (local_var_stmt
-  (binding (name) @definition.var))
+  (binding (name) @local.definition))
 
-(var_stmt
-  (var
-    table: (name)
-    . (_)* @definition.associated
-    field: (name) @definition.var .))
+;(var_stmt
+;  (var
+;    table: (name)
+;    (field (name) @definition.associated)
+;    name: (name) @definition.var .))
 
 (fn_stmt
-  name: (name) @definition.function)
+  . name: (name) @local.definition)
   (#set! definition.function.scope "parent")
 
 (local_fn_stmt
-  (name) @definition.function)
-
-(fn_stmt
-  field: (name) @definition.function (_) !field)
-  (#set! definition.method.scope "parent")
+  (name) @local.definition)
 
 (fn_stmt
   method: (name) @definition.function)
   (#set! definition.method.scope "parent")
 
 (for_in_stmt
-  (binding (name) @definition.var))
+  (binding (name) @local.definition))
 
 (for_range_stmt
-  . (binding (name) @definition.var))
+  . (binding (name) @local.definition))
 
-(param (name) @definition.parameter)
+(param (name) @local.definition)
 
-(param (vararg) @definition.parameter)
+(param (vararg) @local.definition)
 
 ; References
 
 [
   (name)
-] @reference
+] @local.reference
