@@ -13,10 +13,9 @@
   (arglist)
 ] @indent
 
-[
+([
  "end"
  "until"
  ")"
  "}"
-] @outdent
-
+] @outdent)

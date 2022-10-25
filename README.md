@@ -99,8 +99,9 @@ au BufRead,BufNewFile *.luau lua _G.start_luau_lsp()
 helix editor has dedicated support for tree-sitter and is extensible through
 its `languages.toml` file. here's a rough sketch for the setup on Windows.
 
-1. create the `languages.toml` file if it doesn't already exist ([docs](https://docs.helix-editor.com/languages.html))
-2. append two entries inside `languages.toml`:
+1. have a c/c++ compiler for building tree-sitter parsers
+2. create the `languages.toml` file if it doesn't already exist ([docs](https://docs.helix-editor.com/languages.html))
+3. append two entries inside `languages.toml`:
 ```toml
 [[language]]
 name = "luau"
@@ -116,6 +117,6 @@ roots = [ "aftman.toml", "default.project.json", "wally.toml" ]
 name = "luau"
 source = { git = "https://github.com/polychromatist/tree-sitter-luau" }
 ```
-3. run `.\scripts\clone_helix_queries.ps1` (or manually clone from `.\helix-queries\` into `<helix-config>\runtime\queries\luau`)
-4. run `hx --build fetch` && `hx --build grammar`
+4. run `.\scripts\clone_helix_queries.ps1` (or manually clone from `.\helix-queries\` into `<helix-config>\runtime\queries\luau`)
+5. run `hx --grammar fetch` && `hx --grammar build`
 
