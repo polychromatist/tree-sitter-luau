@@ -11,3 +11,6 @@ node_modules/
 queries/
 /*.luau
 /aftman.toml
+Cargo.lock
+*.wasm
+*.wat

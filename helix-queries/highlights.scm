@@ -206,7 +206,7 @@
 
 (_ table: (name) @variable.builtin (#eq? @variable.builtin "bit32")
    . (name)? @function.builtin
-   (#match? @function.builtin "^(arshift|lrotate|lshift|replace|rrotate|rshift|btest|bxor|band|bnot|bor|countlz|countrz)$")
+   (#match? @function.builtin "^(arshift|lrotate|lshift|replace|rrotate|rshift|btest|bxor|band|bnot|bor|countlz|countrz|extract)$")
 )
 
 (_ table: (name) @variable.builtin (#eq? @variable.builtin "coroutine")
