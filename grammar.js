@@ -18,23 +18,27 @@ const PREC = {
 
 const WHITESPACE = /\s/;
 const NAME = /[a-zA-Z_][0-9a-zA-Z_]*/;
-const DECIMAL_DIGIT = /[0-9_]/;
-const HEX_DIGIT = /[0-9a-fA-F_]/;
-const BINARY_DIGIT = /[01_]/;
+const DECIMAL_DIGIT = /[0-9]/;
+const HEX_DIGIT = /[0-9a-fA-F]/;
+const BINARY_DIGIT = /[01]/;
 const DIRECTIVE = /--!/;
+
+const _num_und = (digit) => repeat(choice(digit, "_"))
 
 const _numeral = (digit) =>
   choice(
-    repeat1(digit),
-    seq(repeat1(digit), ".", repeat(digit)),
-    seq(repeat(digit), ".", repeat1(digit)),
+    seq(digit, _num_und(digit)),
+    seq(digit, _num_und(digit), ".", _num_und(digit)),
+    seq(".", digit, _num_und(digit)),
   );
 
 const _exponent_part = (...delimiters) =>
   seq(
     choice(...delimiters),
     optional(choice("+", "-")),
-    repeat1(DECIMAL_DIGIT),
+    repeat("_"),
+    DECIMAL_DIGIT,
+    _num_und(DECIMAL_DIGIT)
   );
 
 const _list_strict = (rule, sep) => seq(rule, repeat(seq(sep, rule)));
@@ -364,8 +368,8 @@ module.exports = grammar({
     number: $ => token(
       seq(optional("-"), choice(
         seq(_numeral(DECIMAL_DIGIT), optional(_exponent_part("e", "E"))),
-        seq(choice("0x", "0X"), repeat1(HEX_DIGIT)),
-        seq(choice("0b", "0B"), repeat1(BINARY_DIGIT))))),
+        seq("0", repeat("_"), choice("x", "X"), _num_und(HEX_DIGIT)),
+        seq("0", repeat("_"), choice("b", "B"), _num_und(BINARY_DIGIT))))),
     vararg: () => "...",
 
     string: $ => seq($._string_start, optional($._string_content), $._string_end),

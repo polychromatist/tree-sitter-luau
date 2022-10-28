@@ -3335,31 +3335,26 @@
                     "type": "CHOICE",
                     "members": [
                       {
-                        "type": "REPEAT1",
-                        "content": {
-                          "type": "PATTERN",
-                          "value": "[0-9_]"
-                        }
-                      },
-                      {
                         "type": "SEQ",
                         "members": [
                           {
-                            "type": "REPEAT1",
-                            "content": {
-                              "type": "PATTERN",
-                              "value": "[0-9_]"
-                            }
-                          },
-                          {
-                            "type": "STRING",
-                            "value": "."
+                            "type": "PATTERN",
+                            "value": "[0-9]"
                           },
                           {
                             "type": "REPEAT",
                             "content": {
-                              "type": "PATTERN",
-                              "value": "[0-9_]"
+                              "type": "CHOICE",
+                              "members": [
+                                {
+                                  "type": "PATTERN",
+                                  "value": "[0-9]"
+                                },
+                                {
+                                  "type": "STRING",
+                                  "value": "_"
+                                }
+                              ]
                             }
                           }
                         ]
@@ -3368,10 +3363,23 @@
                         "type": "SEQ",
                         "members": [
                           {
+                            "type": "PATTERN",
+                            "value": "[0-9]"
+                          },
+                          {
                             "type": "REPEAT",
                             "content": {
-                              "type": "PATTERN",
-                              "value": "[0-9_]"
+                              "type": "CHOICE",
+                              "members": [
+                                {
+                                  "type": "PATTERN",
+                                  "value": "[0-9]"
+                                },
+                                {
+                                  "type": "STRING",
+                                  "value": "_"
+                                }
+                              ]
                             }
                           },
                           {
@@ -3379,10 +3387,48 @@
                             "value": "."
                           },
                           {
-                            "type": "REPEAT1",
+                            "type": "REPEAT",
                             "content": {
-                              "type": "PATTERN",
-                              "value": "[0-9_]"
+                              "type": "CHOICE",
+                              "members": [
+                                {
+                                  "type": "PATTERN",
+                                  "value": "[0-9]"
+                                },
+                                {
+                                  "type": "STRING",
+                                  "value": "_"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "SEQ",
+                        "members": [
+                          {
+                            "type": "STRING",
+                            "value": "."
+                          },
+                          {
+                            "type": "PATTERN",
+                            "value": "[0-9]"
+                          },
+                          {
+                            "type": "REPEAT",
+                            "content": {
+                              "type": "CHOICE",
+                              "members": [
+                                {
+                                  "type": "PATTERN",
+                                  "value": "[0-9]"
+                                },
+                                {
+                                  "type": "STRING",
+                                  "value": "_"
+                                }
+                              ]
                             }
                           }
                         ]
@@ -3430,10 +3476,30 @@
                             ]
                           },
                           {
-                            "type": "REPEAT1",
+                            "type": "REPEAT",
                             "content": {
-                              "type": "PATTERN",
-                              "value": "[0-9_]"
+                              "type": "STRING",
+                              "value": "_"
+                            }
+                          },
+                          {
+                            "type": "PATTERN",
+                            "value": "[0-9]"
+                          },
+                          {
+                            "type": "REPEAT",
+                            "content": {
+                              "type": "CHOICE",
+                              "members": [
+                                {
+                                  "type": "PATTERN",
+                                  "value": "[0-9]"
+                                },
+                                {
+                                  "type": "STRING",
+                                  "value": "_"
+                                }
+                              ]
                             }
                           }
                         ]
@@ -3449,23 +3515,43 @@
                 "type": "SEQ",
                 "members": [
                   {
+                    "type": "STRING",
+                    "value": "0"
+                  },
+                  {
+                    "type": "REPEAT",
+                    "content": {
+                      "type": "STRING",
+                      "value": "_"
+                    }
+                  },
+                  {
                     "type": "CHOICE",
                     "members": [
                       {
                         "type": "STRING",
-                        "value": "0x"
+                        "value": "x"
                       },
                       {
                         "type": "STRING",
-                        "value": "0X"
+                        "value": "X"
                       }
                     ]
                   },
                   {
-                    "type": "REPEAT1",
+                    "type": "REPEAT",
                     "content": {
-                      "type": "PATTERN",
-                      "value": "[0-9a-fA-F_]"
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "PATTERN",
+                          "value": "[0-9a-fA-F]"
+                        },
+                        {
+                          "type": "STRING",
+                          "value": "_"
+                        }
+                      ]
                     }
                   }
                 ]
@@ -3474,23 +3560,43 @@
                 "type": "SEQ",
                 "members": [
                   {
+                    "type": "STRING",
+                    "value": "0"
+                  },
+                  {
+                    "type": "REPEAT",
+                    "content": {
+                      "type": "STRING",
+                      "value": "_"
+                    }
+                  },
+                  {
                     "type": "CHOICE",
                     "members": [
                       {
                         "type": "STRING",
-                        "value": "0b"
+                        "value": "b"
                       },
                       {
                         "type": "STRING",
-                        "value": "0B"
+                        "value": "B"
                       }
                     ]
                   },
                   {
-                    "type": "REPEAT1",
+                    "type": "REPEAT",
                     "content": {
-                      "type": "PATTERN",
-                      "value": "[01_]"
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "PATTERN",
+                          "value": "[01]"
+                        },
+                        {
+                          "type": "STRING",
+                          "value": "_"
+                        }
+                      ]
                     }
                   }
                 ]
