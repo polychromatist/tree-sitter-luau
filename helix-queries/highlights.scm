@@ -1,5 +1,3 @@
-;; Keywords
-
 "return" @keyword.control.return
 
 "local" @keyword.storage.modifier
@@ -127,15 +125,12 @@
   ".."
 ] @operator
 
-;; Punctuations
 [
   ";"
   ":"
   ","
   "."
 ] @punctuation.delimiter
-
-;; Brackets
 
 [
  "("
@@ -146,19 +141,6 @@
  "}"
 ] @punctuation.bracket
 
-;; Variables
-
-;((var (name) @variable.global
-;  (#any-of? @variable.global
-;  "_G" "_VERSION")))
-;((var (name) @variable.builtin
-;  (#any-of? @variable.builtin
-;  "self")))
-
-;; Constants
-
-((name) @constant
- (#match? @constant "^[A-Z][A-Z_0-9]*$"))
 
 (exp (vararg) @constant)
 
@@ -166,43 +148,23 @@
 
 (boolean) @constant.builtin.boolean
 
-;; Tables
-
-;; Functions
-
 (param (name) @variable.parameter)
 
-; (function_call name: (dot_index_expression field: (identifier) @function.call))
-; (function_declaration name: (dot_index_expression field: (identifier) @function))
-
-; (method_index_expression method: (identifier) @method)
-
-; declaration
 (type_stmt (name) @type)
 
 (generic (name) @type)
 
-(namedtype module: (name)? @namespace "."?
-           . (name) @type !module)
+(namedtype module: (name) @namespace . (name) @type)
+
+(namedtype . (name) @type.builtin !module
+  (#match? @type.builtin "^(number|string|any|never|unknown|boolean|thread|userdata)$"))
+
+(namedtype . (name) @type !module)
 
 (tbtype prop: (name) @variable.other.member)
 
-;; Top-level functions
-
-;(call_stmt
-;  . invoked: (var (name) @function.builtin !table
-;  (#any-of? @function.builtin
-;    "assert" "collectgarbage" "error" "gcinfo" "getfenv" "getmetatable" "ipairs"
-;    "loadstring" "next" "newproxy" "pairs" "pcall" "print"
-;    "rawequal" "rawget" "rawlen" "rawset" "select" "setfenv" "setmetatable"
-;    "tonumber" "tostring" "type" "typeof" "unpack" "xpcall")))
-
 (var . (name) @function.builtin !table
   (#match? @function.builtin "^(assert|collectgarbage|error|gcinfo|getfenv|getmetatable|ipairs|loadstring|next|newproxy|pairs|pcall|print|rawequal|rawget|rawlen|rawset|require|select|setfenv|setmetatable|tonumber|tostring|type|typeof|unpack|xpcall)$"))
-
-;(call_stmt
-;  invoked: (var (name) @keyword.control.import !table
-;  (#eq? @keyword.control.import "require")))
 
 (_ table: (name) @variable.builtin (#eq? @variable.builtin "bit32")
    . (name)? @function.builtin
@@ -256,8 +218,11 @@
 
 (var (name) @variable.builtin (#match? @variable.builtin "^(_G|_VERSION|self|bit32|coroutine|debug|math|os|string|table|task|utf8)$"))
 
-(call_stmt invoked: (var (name) @function .))
+((name) @constant
+ (#match? @constant "^[A-Z][A-Z_0-9]*$"))(call_stmt invoked: (var (name) @function .))
+
 (call_stmt method: (name) @function.method)
+(fn_stmt method: (name) @function.method)
 (fn_stmt name: (name) @function)
 (local_fn_stmt (name) @function)
 
@@ -268,8 +233,6 @@
 ] @constructor)
 
 (comment) @comment
-
-; (hash_bang_line) @comment
 
 (number) @constant.numeric
 
