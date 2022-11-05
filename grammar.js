@@ -155,7 +155,7 @@ module.exports = grammar({
     genpackdef: $ => seq($.genpack, optional(seq("=", $.typepack))),
     _type_stmt_packlist: $ => _list_strict($.genpackdef, ","),
 
-    _assign: $ => choice(
+    _assign: () => choice(
       "=",
       "+=",
       "-=",
@@ -330,7 +330,7 @@ module.exports = grammar({
       choice($.typepack, $.type)),
     _fntype_gen: $ => seq("<", $._genlist, ">"),
     _fntype_wrap: $ => prec.dynamic(0, seq("(", optional($._fntype_paramlist), ")", "->")),
-    _fntype_param: $ => seq(optional(seq(field("param_name", $.name), ":")), $.type),
+    _fntype_param: $ => seq(optional(seq($.name, ":")), $.type),
     _fntype_paramlist: $ => _list_vrd($._fntype_param, $._fntype_paramlist_vrd, ","),
     /*
     _fntype_parlist: $ => choice(
@@ -365,7 +365,7 @@ module.exports = grammar({
     genpack: $ => seq($.generic, "..."),
     _genpack_list: $ => _list_strict($.genpack, ","),
 
-    number: $ => token(
+    number: () => token(
       seq(optional("-"), choice(
         seq(_numeral(DECIMAL_DIGIT), optional(_exponent_part("e", "E"))),
         seq("0", repeat("_"), choice("x", "X"), _num_und(HEX_DIGIT)),

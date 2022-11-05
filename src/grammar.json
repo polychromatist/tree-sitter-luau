@@ -2858,12 +2858,8 @@
               "type": "SEQ",
               "members": [
                 {
-                  "type": "FIELD",
-                  "name": "param_name",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "name"
-                  }
+                  "type": "SYMBOL",
+                  "name": "name"
                 },
                 {
                   "type": "STRING",

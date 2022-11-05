@@ -10,7 +10,7 @@
   (for_range_stmt)
   (table)
   (tbtype)
-  (arglist)
+;  (arglist)
 ] @indent
 
 ([

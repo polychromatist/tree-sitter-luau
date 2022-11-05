@@ -1115,24 +1115,17 @@
   {
     "type": "paramlist",
     "named": true,
-    "fields": {
-      "param_name": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "name",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": true,
       "required": false,
       "types": [
         {
           "type": "genpack",
+          "named": true
+        },
+        {
+          "type": "name",
           "named": true
         },
         {

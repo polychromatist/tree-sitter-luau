@@ -95,8 +95,8 @@
  "else"
 ] @keyword.operator)
 
-(type_stmt "export") @keyword.storage.modifier
-(type_stmt "type") @keyword.storage.type
+(type_stmt "export" @keyword.storage.modifier) 
+(type_stmt "type" @keyword.storage.type) 
 [
   "+"
   "-"
@@ -150,16 +150,16 @@
 
 (param (name) @variable.parameter)
 
-(type_stmt (name) @type)
-
 (generic (name) @type)
 
-(namedtype module: (name) @namespace . (name) @type)
+(namedtype . module: (name) @namespace . (name) @type)
 
 (namedtype . (name) @type.builtin !module
   (#match? @type.builtin "^(number|string|any|never|unknown|boolean|thread|userdata)$"))
 
 (namedtype . (name) @type !module)
+
+(type_stmt . (name) @type)
 
 (tbtype prop: (name) @variable.other.member)
 
@@ -216,10 +216,12 @@
    (#match? @function.builtin "^(char|codepoint|codes|len|offset|nfcnormalize|nfdnormalize)$")
 )
 
-(var (name) @variable.builtin (#match? @variable.builtin "^(_G|_VERSION|self|bit32|coroutine|debug|math|os|string|table|task|utf8)$"))
+(var . (name) @variable.builtin (#match? @variable.builtin "^(_G|_VERSION|self|bit32|coroutine|debug|math|os|string|table|task|utf8)$"))
 
 ((name) @constant
- (#match? @constant "^[A-Z][A-Z_0-9]*$"))(call_stmt invoked: (var (name) @function .))
+ (#match? @constant "^[A-Z][A-Z_0-9]*$"))
+
+(call_stmt invoked: (var (name) @function .))
 
 (call_stmt method: (name) @function.method)
 (fn_stmt method: (name) @function.method)
