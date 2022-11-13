@@ -218,6 +218,7 @@
 
 (var . (name) @variable.builtin (#match? @variable.builtin "^(_G|_VERSION|self|bit32|coroutine|debug|math|os|string|table|task|utf8)$"))
 
+(field key: (name) @function.method value: (callback))
 (field key: (name) @variable.other.member)
 (var field: (name) @variable.other.member)
 
