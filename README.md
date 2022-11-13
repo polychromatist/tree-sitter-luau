@@ -3,7 +3,7 @@
 Luau grammar for [tree-sitter](https://github.com/tree-sitter/tree-sitter)
 
 <details>
-  <summary>deploying in [helix editor](https://github.com/helix-editor/helix)</summary>
+  <summary>deploying in <a href="https://github.com/helix-editor/helix">helix editor</a></summary>
 
   1. create the `languages.toml` file if it doesn't already exist ([docs](https://docs.helix-editor.com/languages.html))
   2. append two entries inside `languages.toml`:
@@ -59,7 +59,7 @@ Luau grammar for [tree-sitter](https://github.com/tree-sitter/tree-sitter)
     - copy `.\nvim-queries\` folder's content (from this project) to `after\queries\luau`
 
   <details>
-    <summary>Deploying [luau-lsp](https://github.com/johnnymorganz/luau-lsp) for high quality linting</summary>
+    <summary>Deploying <a href="https://github.com/johnnymorganz/luau-lsp">luau-lsp</a> for high quality linting</summary>
 
     1. download or compile `luau-lsp`: https://github.com/JohnnyMorganz/luau-lsp/releases
     2. make sure you have either an `aftman.toml`, `wally.toml`, or `default.project.json` file in the project root
