@@ -36,14 +36,14 @@
 
 (fn_stmt
   . name: (name) @local.definition)
-  (#set! definition.function.scope "parent")
+;  (#set! definition.function.scope "parent")
 
 (local_fn_stmt
   (name) @local.definition)
 
 (fn_stmt
-  method: (name) @definition.function)
-  (#set! definition.method.scope "parent")
+  method: (name) @local.definition)
+;  (#set! definition.method.scope "parent")
 
 (for_in_stmt
   (binding (name) @local.definition))
@@ -57,6 +57,4 @@
 
 ; References
 
-[
-  (name)
-] @local.reference
+(var (name) @local.reference)
