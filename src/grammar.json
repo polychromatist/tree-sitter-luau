@@ -1028,6 +1028,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "string_interp"
+        },
+        {
+          "type": "SYMBOL",
           "name": "vararg"
         },
         {
@@ -3631,6 +3635,64 @@
         }
       ]
     },
+    "string_interp": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "interp_start"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "interp_content"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "interp_exp"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "interp_end"
+        }
+      ]
+    },
+    "interp_exp": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "interp_brace_open"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "expression",
+              "content": {
+                "type": "SYMBOL",
+                "name": "exp"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "interp_brace_close"
+        }
+      ]
+    },
     "boolean": {
       "type": "CHOICE",
       "members": [
@@ -3732,6 +3794,26 @@
     {
       "type": "SYMBOL",
       "name": "_string_end"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "interp_start"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "interp_content"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "interp_brace_open"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "interp_brace_close"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "interp_end"
     }
   ],
   "inline": [

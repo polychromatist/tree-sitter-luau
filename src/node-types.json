@@ -40,6 +40,10 @@
         "named": true
       },
       {
+        "type": "string_interp",
+        "named": true
+      },
+      {
         "type": "table",
         "named": true
       },
@@ -989,6 +993,36 @@
     }
   },
   {
+    "type": "interp_exp",
+    "named": true,
+    "fields": {
+      "expression": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "interp_brace_close",
+          "named": true
+        },
+        {
+          "type": "interp_brace_open",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "local_fn_stmt",
     "named": true,
     "fields": {
@@ -1203,6 +1237,33 @@
     "type": "string",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "string_interp",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "interp_content",
+          "named": true
+        },
+        {
+          "type": "interp_end",
+          "named": true
+        },
+        {
+          "type": "interp_exp",
+          "named": true
+        },
+        {
+          "type": "interp_start",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "table",
@@ -1729,6 +1790,26 @@
   {
     "type": "in",
     "named": false
+  },
+  {
+    "type": "interp_brace_close",
+    "named": true
+  },
+  {
+    "type": "interp_brace_open",
+    "named": true
+  },
+  {
+    "type": "interp_content",
+    "named": true
+  },
+  {
+    "type": "interp_end",
+    "named": true
+  },
+  {
+    "type": "interp_start",
+    "named": true
   },
   {
     "type": "local",
