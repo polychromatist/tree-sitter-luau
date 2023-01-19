@@ -124,10 +124,6 @@ static void escape_handler(TSLexer *lexer)
     {
       while ((consume_if(lexer, ' ') || consume_if(lexer, '\t') || consume_if(lexer, '\n')) && !lexer->eof(lexer));
     }
-    else
-    {
-      consume(lexer);
-    }
   }
 }
 
