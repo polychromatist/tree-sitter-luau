@@ -14,3 +14,4 @@ queries/
 Cargo.lock
 *.wasm
 *.wat
+/compile_flags.txt

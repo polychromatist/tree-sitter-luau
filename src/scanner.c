@@ -315,6 +315,10 @@ bool tree_sitter_luau_external_scanner_scan(void *payload, TSLexer *lexer, const
     }
     case INTERP_EXPRESSION:
     {
+        while (iswspace(lexer->lookahead))
+        {
+          skip(lexer);
+        }
         if (valid_symbols[INTERP_BRACE_CLOSE]) {
           if (consume_if(lexer, '}')) {
             state->idepth--;
