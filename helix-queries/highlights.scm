@@ -102,6 +102,7 @@
   "-"
   "*"
   "/"
+  "//"
   "%"
   "^"
   "#"
@@ -118,6 +119,7 @@
   "-="
   "*="
   "/="
+  "//="
   "%="
   "^="
   "..="
@@ -251,7 +253,7 @@
 
 (string) @string
 
-(var (name) @variable)
+(var (name) @variable !field)
 
 ;; Error
 (ERROR) @error

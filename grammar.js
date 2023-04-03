@@ -163,7 +163,8 @@ module.exports = grammar({
       "/=",
       "%=",
       "^=",
-      "..="),
+      "..=",
+      "//="),
 
     exp: $ => choice(
       $.nil,
@@ -196,6 +197,7 @@ module.exports = grammar({
         ["-", PREC.ADDSUB],
         ["*", PREC.MULDIV],
         ["/", PREC.MULDIV],
+        ["//", PREC.MULDIV],
         ["%", PREC.MULDIV]
       ].map(([op, pri]) =>
         prec.left(pri, seq( field("arg0", $.exp), field("op", op), field("arg1", $.exp) ))),
