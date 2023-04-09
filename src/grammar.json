@@ -2519,6 +2519,10 @@
         {
           "type": "SYMBOL",
           "name": "nil"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "boolean"
         }
       ]
     },

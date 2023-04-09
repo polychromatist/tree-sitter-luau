@@ -1227,6 +1227,10 @@
       "required": true,
       "types": [
         {
+          "type": "boolean",
+          "named": true
+        },
+        {
           "type": "nil",
           "named": true
         },

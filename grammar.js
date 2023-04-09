@@ -296,7 +296,7 @@ module.exports = grammar({
       $._type_typeof,
       $._type_func,
       $._type_table),*/
-    singleton: $ => choice($.string, $.nil),
+    singleton: $ => choice($.string, $.nil, $.boolean),
     namedtype: $ => prec.right(PREC.TYPEPARAM, seq(
       optional(seq(field("module", $.name), ".")),
       $.name,
