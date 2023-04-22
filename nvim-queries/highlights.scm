@@ -186,24 +186,6 @@
   "}"
 ] @constructor)
 
-;; Functions
-
-(param (name) @parameter)
-
-;(call_stmt . invoked: (var (name) @function.call !table) (arglist))
-;(call_stmt invoked: (var field: (name) @function.call) . (arglist))
-(call_stmt invoked: (var (name) @function.call .))
-(call_stmt method: (name) @method.call)
-(fn_stmt name: (name) @function)
-;(fn_stmt field: (name) @function . (_ !field))
-(fn_stmt method: (name) @method)
-(local_fn_stmt (name) @function)
-
-; (function_call name: (dot_index_expression field: (identifier) @function.call))
-; (function_declaration name: (dot_index_expression field: (identifier) @function))
-
-; (method_index_expression method: (identifier) @method)
-
 ;; Types
 
 ; declaration
@@ -211,46 +193,45 @@
 
 (generic (name) @type.qualifier)
 
-(namedtype module: (name)? @namespace
-           (name) @type !module)
+(namedtype . module: (name) @namespace . (name) @type)
+(namedtype . (name) @type.builtin !module
+  (#any-of? @type.builtin
+    "number" "string" "any" "never" "unknown" "boolean" "thread" "userdata"))
+(namedtype . (name) @type !module)
 
 (tbtype prop: (name) @property)
 
 ;; Top-level functions
 
-(call_stmt
-  . invoked: (var (name) @function.builtin !table
+(var . (name) @function.builtin !table
   (#any-of? @function.builtin
     "assert" "collectgarbage" "error" "gcinfo" "getfenv" "getmetatable" "ipairs"
     "loadstring" "next" "newproxy" "pairs" "pcall" "print"
-    "rawequal" "rawget" "rawlen" "rawset" "select" "setfenv" "setmetatable"
-    "tonumber" "tostring" "type" "typeof" "unpack" "xpcall")))
-(call_stmt
-  . invoked: (var (name) @import !table
-  (#eq? @import "require")))
+    "rawequal" "rawget" "rawlen" "rawset" "require" "select" "setfenv" "setmetatable"
+    "tonumber" "tostring" "type" "typeof" "unpack" "xpcall"))
 ; bit32
-(var table: (name) @variable.builtin
+(_ table: (name) @variable.builtin
      (#eq? @variable.builtin "bit32")
      field: (name) @function.builtin
      (#any-of? @function.builtin
       "arshift" "lrotate" "lshift" "replace" "rrotate" "rshift"
       "btest" "bxor" "band" "bnot" "bor" "countlz" "countrz" "extract"))
 ; coroutine
-(var table: (name) @variable.builtin
+(_ table: (name) @variable.builtin
      (#eq? @variable.builtin "coroutine")
      field: (name) @function.builtin
      (#any-of? @function.builtin
       "close" "create" "isyieldable" "resume" "running"
       "status" "wrap" "yield"))
 ; debug
-(var table: (name) @variable.builtin
+(_ table: (name) @variable.builtin
      (#eq? @variable.builtin "debug")
      field: (name) @function.builtin
      (#any-of? @function.builtin
       "info" "traceback" "profilebegin" "profileend"
       "resetmemorycategory" "setmemorycategory"))
 ; math
-(var table: (name) @variable.builtin
+(_ table: (name) @variable.builtin
      (#eq? @variable.builtin "math")
       field: (name) @function.builtin
       (#any-of? @function.builtin
@@ -259,44 +240,58 @@
        "log10" "max" "min" "modf" "noise" "pow" "rad" "random"
        "randomseed" "round" "sign" "sin" "sinh" "sqrt" "tan" "tanh"))
 ; math constants
-(var table: (name) @variable.builtin
+(_ table: (name) @variable.builtin
      (#eq? @variable.builtin "math")
      field: (name) @constant.builtin
       (#any-of? @constant.builtin
        "huge" "pi"))
 ; os
-(var table: (name) @variable.builtin
+(_ table: (name) @variable.builtin
      (#eq? @variable.builtin "os")
      field: (name) @function.builtin
      (#any-of? @function.builtin
       "clock" "date" "difftime" "time"))
 ; string
-(var table: (name) @variable.builtin
+(_ table: (name) @variable.builtin
      (#eq? @variable.builtin "string")
      field: (name) @function.builtin
      (#any-of? @function.builtin
       "byte" "char" "find" "format" "gmatch" "gsub" "len" "lower"
       "match" "pack" "packsize" "rep" "reverse" "split" "sub" "unpack" "upper"))
 ; table
-(var table: (name) @variable.builtin
+(_ table: (name) @variable.builtin
      (#eq? @variable.builtin "table")
      field: (name) @function.builtin
      (#any-of? @function.builtin
       "create" "clear" "clone" "concat" "foreach" "foreachi" "find" "freeze"
       "getn" "insert" "isfrozen" "maxn" "move" "pack" "remove" "sort" "unpack"))
 ; task
-(var table: (name) @variable.builtin
+(_ table: (name) @variable.builtin
      (#eq? @variable.builtin "task")
      field: (name) @function.builtin
      (#any-of? @function.builtin
       "cancel" "defer" "delay" "desynchronze" "spawn" "wait"))
 ; utf8
-(var table: (name) @variable.builtin
+(_ table: (name) @variable.builtin
      (#eq? @variable.builtin "utf8")
      field: (name) @function.builtin
      (#any-of? @function.builtin
-      "char" "codepoint" "codes" "len" "offset"))
-      
+      "char" "codepoint" "codes" "len" "offset" "graphemes" "nfcnormalize" "nfdnormalize"))
+
+(_ table: (name) @variable.builtin 
+   (#eq? @variable.builtin "utf8")
+   . (name) @constant.builtin
+   (#eq? @constant.builtin "charpattern"))
+
+;; Functions
+
+(param (name) @parameter)
+
+(call_stmt invoked: (var (name) @function.call .))
+(call_stmt method: (name) @method.call)
+(fn_stmt name: (name) @function)
+(fn_stmt method: (name) @method)
+(local_fn_stmt (name) @function)      
 
 ;(var table: (name) @variable.builtin
 ;  (#any-of? @variable.builtin
@@ -310,6 +305,11 @@
 
 (number) @number
 
+(interp_start) @punctuation
+(interp_content) @string
+(interp_brace_open) @punctuation.bracket
+(interp_brace_close) @punctuation.bracket
+(interp_end) @punctuation
 (string) @string @spell
 
 ;; Error

@@ -11,16 +11,16 @@
   (table)
   (tbtype)
   (arglist)
-] @indent
+] @indent.begin
 
 [
  "end"
  ")"
  "}"
-] @indent_end
+] @indent.end
 
 (ret_stmt
-  (call_stmt)) @dedent
+  (call_stmt)) @indent.dedent
 
 [
  "end"
@@ -32,8 +32,8 @@
  (elseif_clause)
  "else"
  (else_clause)
-] @branch
+] @indent.branch
 
-(comment) @auto
+(comment) @indent.auto
 
-(string) @auto
+(string) @indent.auto

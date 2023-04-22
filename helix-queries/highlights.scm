@@ -222,18 +222,18 @@
 (var . (name) @variable.builtin (#match? @variable.builtin "^(_G|_VERSION|self|bit32|coroutine|debug|math|os|string|table|task|utf8)$"))
 
 (field key: (name) @function.method value: (callback))
-(field key: (name) @variable.other.member)
-(var field: (name) @variable.other.member)
-
-((name) @constant
- (#match? @constant "^[A-Z][A-Z_0-9]*$"))
-
 (call_stmt invoked: (var (name) @function .))
 
 (call_stmt method: (name) @function.method)
 (fn_stmt method: (name) @function.method)
 (fn_stmt name: (name) @function)
 (local_fn_stmt (name) @function)
+
+(field key: (name) @variable.other.member)
+(var field: (name) @variable.other.member)
+
+((name) @constant
+ (#match? @constant "^[A-Z][A-Z_0-9]*$"))
 
 (table
 [
