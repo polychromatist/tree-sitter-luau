@@ -34,6 +34,14 @@ static bool consume_if(TSLexer *lexer, const int32_t character)
 
   return false;
 }
+static bool skipwspace(TSLexer *lexer)
+{
+  if (iswspace(lexer->lookahead) || lexer->lookahead == '\r') {
+    skip(lexer);
+    return true;
+  }
+  return false;
+}
 
 const char SQ_STRING_DELIMITER = '\'';
 const char DQ_STRING_DELIMITER = '"';
@@ -115,16 +123,27 @@ static bool scan_depth(TSLexer *lexer, unsigned int remaining_depth)
   return remaining_depth == 0;
 }
 
-static void escape_handler(TSLexer *lexer)
+static bool escape_handler(TSLexer *lexer)
 {
   
   if (consume_if(lexer, '\\') && !lexer->eof(lexer))
   {
-    if (consume_if(lexer, 'z') && !lexer->eof(lexer))
+    if (lexer->lookahead == '\r') {
+      skip(lexer);
+      if (!lexer->eof(lexer) && lexer->lookahead == '\n') {
+        skip(lexer);
+      }
+    }
+    else if (lexer->lookahead == '\n') {
+      skip(lexer);
+    }
+    else if (consume_if(lexer, 'z') && !lexer->eof(lexer))
     {
-      while ((consume_if(lexer, ' ') || consume_if(lexer, '\t') || consume_if(lexer, '\n')) && !lexer->eof(lexer));
+      while (skipwspace(lexer) && !lexer->eof(lexer));
+      return true;
     }
   }
+  return false;
 }
 
 bool tree_sitter_luau_external_scanner_scan(void *payload, TSLexer *lexer, const bool *valid_symbols)
@@ -225,7 +244,8 @@ bool tree_sitter_luau_external_scanner_scan(void *payload, TSLexer *lexer, const
               }
               else
               {
-                escape_handler(lexer);
+                if (escape_handler(lexer))
+                  continue;
               }
               
               consume(lexer);
@@ -311,10 +331,7 @@ bool tree_sitter_luau_external_scanner_scan(void *payload, TSLexer *lexer, const
     }
     case INTERP_EXPRESSION:
     {
-        while (iswspace(lexer->lookahead))
-        {
-          skip(lexer);
-        }
+        while (skipwspace(lexer));
         if (valid_symbols[INTERP_BRACE_CLOSE]) {
           if (consume_if(lexer, '}')) {
             state->idepth--;
@@ -327,10 +344,7 @@ bool tree_sitter_luau_external_scanner_scan(void *payload, TSLexer *lexer, const
     default:
     {
         // ignore all whitespace
-        while (iswspace(lexer->lookahead))
-        {
-          skip(lexer);
-        }
+        while (skipwspace(lexer));
         
         state->started = 0;
 
