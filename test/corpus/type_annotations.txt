@@ -35,7 +35,8 @@ type Foo<T> = T
 (chunk
   (type_stmt
     (name)
-    (generic (name))
+    (genericdef
+      (generic (name)))
     (namedtype (name))))
 
 ==================

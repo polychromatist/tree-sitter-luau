@@ -55,7 +55,8 @@ end
 (chunk
   (fn_stmt
     (name)
-    (name)
+    (field
+      (name))
     (name)))
 
 ==================
