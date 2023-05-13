@@ -27,35 +27,62 @@ Luau grammar for [tree-sitter](https://github.com/tree-sitter/tree-sitter)
 
 </details>
 
+
+### Note on the Neovim case
+
+There is now a Luau parser packaged in nvim-treesitter which will cause a conflict if naively overwritten.
+[See the issue](https://github.com/polychromatist/tree-sitter-luau/issues/2#issuecomment-1540723013).
+Due to this, the script `scripts/clone_queries.ps1` is now incorrect and has been removed.
+As it stands (5/13/2023), the parser packaged in nvim-treesitter is somewhat OK, but [not fully correct](https://i.imgur.com/FSqjBjK.png). This is not my parser.
+Here is the approach I used to overwrite it.
+
 <details>
-<summary>Deploying in neovim</summary>
+<summary>deploying in neovim, v2</summary>
 <ol>
 <li>have a c/c++ compiler and nodejs</li>
 <li>install <a href="https://github.com/nvim-treesitter/nvim-treesitter">nvim-treesitter</a></li>
+<li>clone or download this repository somewhere</li>
 <li>register parser in init.lua file (or equivalent) with this code fragment:
 <pre><code class="language-lua">
 local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
 
-local luau_ts_path = "https://github.com/polychromatist/tree-sitter-luau"
+local myhome = os.getenv "USERPROFILE" or os.getenv "HOME" -- user profile path, if needed
+
+local mypath = "CHANGE_THIS"
+
+-- Example:
+-- local mypath = myhome .. "/techstuff/hunter2/cloned_repos"
+
 parser_config.luau = {
 install_info = {
-url = luau_ts_path,
+url = mypath .. "/tree-sitter-luau",
 files = {"src/parser.c", "src/scanner.c"},
-branch = "main",
-generate_requires_npm = false,
-requires_generate_from_grammar = false
+-- generate_requires_npm = false,
+-- requires_generate_from_grammar = false
 },
 }
-</code></pre></li>
+</code>
+</pre>
+</li>
 <li>issue Ex command <code>:TSInstall luau</code></li>
-<li>in Neovim config directory (e.g. `%LOCALAPPDATA%\nvim`), do two things:</li>
+<li>in Neovim config directory (e.g. `%LOCALAPPDATA%\nvim`):</li>
 <ul>
 <li>add a file `ftdetect\luau.vim` with the content:
 <pre><code class="language-vim">
 au BufRead,BufNewFile *.luau        set filetype=luau
+</code></pre></li></ul>
+<li>overwrite queries by appending a second code segment to the nvim init.lua file:
+<pre><code class="language-lua">
+-- set queries for luau. parser_config segment should be above
+do
+  for i, v in pairs{"highlights", "indents", "folds", "injections", "locals"} do
+    local fd = io.open(mypath .. "/tree-sitter-luau/nvim-queries/" .. v .. ".scm")
+    local txt = fd:read"*a"
+    fd:close()
+    require"vim.treesitter.query".set_query("luau", v, txt)
+  end
+end
 </code></pre></li>
-<li>copy `.\nvim-queries\` folder's content (from this project) to `after\queries\luau`</li>
-</ul>
 </ol>
 <details>
 <summary>Deploying <a href="https://github.com/johnnymorganz/luau-lsp">luau-lsp</a> for high quality linting</summary>
