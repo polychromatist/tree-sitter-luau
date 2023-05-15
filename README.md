@@ -40,7 +40,7 @@ Here is the approach I used to overwrite it.
 <summary>deploying in neovim, v2</summary>
 <ol>
 <li>have a c/c++ compiler and nodejs</li>
-<li>install <a href="https://github.com/nvim-treesitter/nvim-treesitter">nvim-treesitter</a></li>
+<li>install <a href="https://github.com/nvim-treesitter/nvim-treesitter">nvim-treesitter</a>, and make sure it's configured</li>
 <li>clone or download this repository somewhere</li>
 <li>register parser in init.lua file (or equivalent) with this code fragment:
 <pre><code class="language-lua">
@@ -79,7 +79,7 @@ do
     local fd = io.open(mypath .. "/tree-sitter-luau/nvim-queries/" .. v .. ".scm")
     local txt = fd:read"*a"
     fd:close()
-    require"vim.treesitter.query".set_query("luau", v, txt)
+    vim.treesitter.query.set("luau", v, txt)
   end
 end
 </code></pre></li>

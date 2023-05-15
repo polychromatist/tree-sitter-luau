@@ -193,10 +193,10 @@
 
 (generic (name) @type.qualifier)
 
-(namedtype . module: (name) @namespace . (name) @type)
 (namedtype . (name) @type.builtin !module
   (#any-of? @type.builtin
     "number" "string" "any" "never" "unknown" "boolean" "thread" "userdata"))
+(namedtype . module: (name) @namespace . (name) @type)
 (namedtype . (name) @type !module)
 
 (tbtype prop: (name) @property)
