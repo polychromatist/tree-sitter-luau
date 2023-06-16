@@ -80,6 +80,10 @@
     "named": true,
     "subtypes": [
       {
+        "type": "assign_stmt",
+        "named": true
+      },
+      {
         "type": "break_stmt",
         "named": true
       },
@@ -185,6 +189,25 @@
       "types": [
         {
           "type": "exp",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "assign_stmt",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "exp",
+          "named": true
+        },
+        {
+          "type": "var",
           "named": true
         }
       ]

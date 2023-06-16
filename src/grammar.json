@@ -110,6 +110,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "assign_stmt"
+        },
+        {
+          "type": "SYMBOL",
           "name": "call_stmt"
         },
         {
@@ -711,11 +715,28 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "_varlist"
+          "name": "var"
         },
         {
           "type": "SYMBOL",
           "name": "_assign"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "exp"
+        }
+      ]
+    },
+    "assign_stmt": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_varlist"
+        },
+        {
+          "type": "STRING",
+          "value": "="
         },
         {
           "type": "SYMBOL",
@@ -973,10 +994,6 @@
     "_assign": {
       "type": "CHOICE",
       "members": [
-        {
-          "type": "STRING",
-          "value": "="
-        },
         {
           "type": "STRING",
           "value": "+="
