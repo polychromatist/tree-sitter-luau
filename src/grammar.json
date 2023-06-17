@@ -1057,7 +1057,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "callback"
+          "name": "anon_fn"
         },
         {
           "type": "SYMBOL",
@@ -2262,7 +2262,7 @@
         }
       ]
     },
-    "callback": {
+    "anon_fn": {
       "type": "SEQ",
       "members": [
         {

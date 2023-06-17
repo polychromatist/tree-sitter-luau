@@ -4,15 +4,15 @@
     "named": true,
     "subtypes": [
       {
+        "type": "anon_fn",
+        "named": true
+      },
+      {
         "type": "binexp",
         "named": true
       },
       {
         "type": "boolean",
-        "named": true
-      },
-      {
-        "type": "callback",
         "named": true
       },
       {
@@ -178,6 +178,54 @@
         "named": true
       }
     ]
+  },
+  {
+    "type": "anon_fn",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      },
+      "return_type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type",
+            "named": true
+          },
+          {
+            "type": "typepack",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "generic",
+          "named": true
+        },
+        {
+          "type": "genpack",
+          "named": true
+        },
+        {
+          "type": "param",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "arglist",
@@ -441,54 +489,6 @@
       "types": [
         {
           "type": "arglist",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "callback",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "block",
-            "named": true
-          }
-        ]
-      },
-      "return_type": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "type",
-            "named": true
-          },
-          {
-            "type": "typepack",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "generic",
-          "named": true
-        },
-        {
-          "type": "genpack",
-          "named": true
-        },
-        {
-          "type": "param",
           "named": true
         }
       ]

@@ -174,7 +174,7 @@ module.exports = grammar({
       $.string,
       $.string_interp,
       $.vararg,
-      $.callback,
+      $.anon_fn,
       $.prefixexp,
       $.table,
       $.unexp,
@@ -265,7 +265,7 @@ module.exports = grammar({
     _field_named: $ => seq(".", field("field", $.name)),
     _field_indexed: $ => seq("[", field("field", $.exp), "]"),
 
-    callback: $ => seq("function", $._fn_body),
+    anon_fn: $ => seq("function", $._fn_body),
     _fn_body: $ => seq(
       optional(seq("<", $._genlist, ">")),
       "(", optional($._paramlist), ")",
