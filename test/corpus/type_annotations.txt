@@ -530,7 +530,7 @@ x = 5 + c :: number
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var (name))
     (binexp
       (number)

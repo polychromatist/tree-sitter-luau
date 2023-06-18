@@ -77,7 +77,7 @@
  "end"
 ] @keyword.function)
 
-(callback
+(anon_fn
 [
   "function"
   "end"

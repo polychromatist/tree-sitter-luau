@@ -1,6 +1,6 @@
 [
   (fn_stmt)
-  (callback)
+  (anon_fn)
   (local_fn_stmt)
   (do_stmt)
   (while_stmt)

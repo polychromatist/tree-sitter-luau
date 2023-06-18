@@ -7,7 +7,7 @@ x = nil
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var (name))
     (nil)))
 
@@ -20,7 +20,7 @@ x = true
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var (name))
     (boolean)))
 
@@ -33,7 +33,7 @@ x = false
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var (name))
     (boolean)))
 
@@ -46,7 +46,7 @@ x = 1
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var
       (name))
     (number)))
@@ -61,10 +61,10 @@ x = .50
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var (name))
     (number))
-  (var_stmt
+  (assign_stmt
     (var (name))
     (number)))
 
@@ -77,7 +77,7 @@ x = -1
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var
       (name))
     (number)))
@@ -91,7 +91,7 @@ x = 1e5
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var
       (name))
     (number)))
@@ -105,7 +105,7 @@ x = 0xFF
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var
       (name))
     (number)))
@@ -119,7 +119,7 @@ x = 0b101011
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var
       (name))
     (number)))
@@ -135,13 +135,13 @@ x = 0b_0101_0101
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var (name))
     (number))
-  (var_stmt
+  (assign_stmt
     (var (name))
     (number))
-  (var_stmt
+  (assign_stmt
     (var (name))
     (number)))
 
@@ -154,7 +154,7 @@ x = 1 + 1
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var (name))
     (binexp (number) (number))))
 
@@ -167,7 +167,7 @@ x = x + y
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var (name))
     (binexp (var (name)) (var (name)))))
 
@@ -181,10 +181,10 @@ x = foo and bar or baz
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var (name))
     (binexp (var (name)) (var (name))))
-  (var_stmt
+  (assign_stmt
     (var (name))
     (binexp
       (binexp (var (name)) (var (name)))
@@ -199,7 +199,7 @@ x = { true }
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var (name))
     (table
       (fieldlist (field (boolean))))))
@@ -213,7 +213,7 @@ x = { foo = bar, bar = baz }
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var (name))
     (table
       (fieldlist
@@ -229,7 +229,7 @@ x = { ["foo"] = bar, [call()] = baz }
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var (name))
     (table
       (fieldlist

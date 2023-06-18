@@ -17,7 +17,7 @@
  (for_in_stmt)
  (fn_stmt)
  (local_fn_stmt)
- (callback)
+ (anon_fn)
 ] @local.scope
 
 ; Definitions

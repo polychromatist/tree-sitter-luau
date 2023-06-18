@@ -20,7 +20,7 @@ do x = true end
 (chunk
   (do_stmt
     (block
-      (var_stmt
+      (assign_stmt
         (var
           (name))
         (boolean)))))
@@ -40,11 +40,11 @@ end
 (chunk
   (do_stmt
     (block
-      (var_stmt
+      (assign_stmt
         (var
           (name))
         (boolean))
-      (var_stmt
+      (assign_stmt
         (var
           (name))
         (boolean))

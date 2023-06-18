@@ -7,7 +7,7 @@ x = 1
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var
       (name))
     (number)))
@@ -21,7 +21,7 @@ a, b = 1, true
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var
       (name))
     (var
@@ -38,7 +38,7 @@ a, b, c.d.e[f][g][1], h:i().j[k]:l()[m] = true, false, 1, 4
 ---
 
 (chunk
-  (var_stmt
+  (assign_stmt
     (var
       (name))
     (var
