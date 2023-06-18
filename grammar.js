@@ -136,7 +136,7 @@ module.exports = grammar({
     local_var_stmt: $ => seq("local", $._bindinglist, optional(seq("=", $._explist))),
 
     var_stmt: $ => seq($.var, $._assign, $.exp),
-    assign_stmt: $ => seq($._varlist, "=", $._explist),
+    assign_stmt: $ => seq(alias($._varlist, $.varlist), "=", alias($._explist, $.explist)),
     _varlist: $ => _list_strict($.var, ","),
 
     type_stmt: $ => seq(

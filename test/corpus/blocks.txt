@@ -21,9 +21,11 @@ do x = true end
   (do_stmt
     (block
       (assign_stmt
-        (var
-          (name))
-        (boolean)))))
+        (varlist
+          (var
+            (name)))
+        (explist
+          (boolean))))))
 
 ==================
 Do block with multiple statements
@@ -41,13 +43,17 @@ end
   (do_stmt
     (block
       (assign_stmt
-        (var
-          (name))
-        (boolean))
+        (varlist
+          (var
+            (name)))
+        (explist
+          (boolean)))
       (assign_stmt
-        (var
-          (name))
-        (boolean))
+        (varlist
+          (var
+            (name)))
+        (explist
+          (boolean)))
       (call_stmt
         (var
           (name))

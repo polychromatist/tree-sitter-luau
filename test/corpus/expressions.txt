@@ -8,8 +8,10 @@ x = nil
 
 (chunk
   (assign_stmt
-    (var (name))
-    (nil)))
+    (varlist
+      (var (name)))
+    (explist
+      (nil))))
 
 ==================
 Handles true
@@ -21,8 +23,10 @@ x = true
 
 (chunk
   (assign_stmt
-    (var (name))
-    (boolean)))
+    (varlist
+      (var (name)))
+    (explist
+      (boolean))))
 
 ==================
 Handles false
@@ -34,8 +38,10 @@ x = false
 
 (chunk
   (assign_stmt
-    (var (name))
-    (boolean)))
+    (varlist
+      (var (name)))
+    (explist
+      (boolean))))
 
 ==================
 Handles simple number
@@ -47,9 +53,11 @@ x = 1
 
 (chunk
   (assign_stmt
-    (var
-      (name))
-    (number)))
+    (varlist
+      (var
+        (name)))
+    (explist
+      (number))))
 
 ==================
 Handles fractional number
@@ -62,11 +70,15 @@ x = .50
 
 (chunk
   (assign_stmt
-    (var (name))
-    (number))
+    (varlist
+      (var (name)))
+    (explist
+      (number)))
   (assign_stmt
-    (var (name))
-    (number)))
+    (varlist
+      (var (name)))
+    (explist
+      (number))))
 
 ==================
 Handles signed number
@@ -78,9 +90,11 @@ x = -1
 
 (chunk
   (assign_stmt
-    (var
-      (name))
-    (number)))
+    (varlist
+      (var
+        (name)))
+    (explist
+      (number))))
 
 ==================
 Handles exponential number
@@ -92,9 +106,11 @@ x = 1e5
 
 (chunk
   (assign_stmt
-    (var
-      (name))
-    (number)))
+    (varlist
+      (var
+        (name)))
+    (explist
+      (number))))
 
 ==================
 Handles hexadecimal number
@@ -106,9 +122,11 @@ x = 0xFF
 
 (chunk
   (assign_stmt
-    (var
-      (name))
-    (number)))
+    (varlist
+      (var
+        (name)))
+    (explist
+      (number))))
 
 ==================
 Handles binary number
@@ -120,9 +138,11 @@ x = 0b101011
 
 (chunk
   (assign_stmt
-    (var
-      (name))
-    (number)))
+    (varlist
+      (var
+        (name)))
+    (explist
+      (number))))
 
 ==================
 Luau: Handles number with separators
@@ -136,14 +156,20 @@ x = 0b_0101_0101
 
 (chunk
   (assign_stmt
-    (var (name))
-    (number))
+    (varlist
+      (var (name)))
+    (explist
+      (number)))
   (assign_stmt
-    (var (name))
-    (number))
+    (varlist
+      (var (name)))
+    (explist
+      (number)))
   (assign_stmt
-    (var (name))
-    (number)))
+    (varlist
+      (var (name)))
+    (explist
+      (number))))
 
 ==================
 Handles binary addition
@@ -155,8 +181,10 @@ x = 1 + 1
 
 (chunk
   (assign_stmt
-    (var (name))
-    (binexp (number) (number))))
+    (varlist
+      (var (name)))
+    (explist
+      (binexp (number) (number)))))
 
 ==================
 Handles binary addition of variables
@@ -168,8 +196,10 @@ x = x + y
 
 (chunk
   (assign_stmt
-    (var (name))
-    (binexp (var (name)) (var (name)))))
+    (varlist
+      (var (name)))
+    (explist
+      (binexp (var (name)) (var (name))))))
 
 ==================
 Handles binary and/or
@@ -182,13 +212,17 @@ x = foo and bar or baz
 
 (chunk
   (assign_stmt
-    (var (name))
-    (binexp (var (name)) (var (name))))
+    (varlist
+      (var (name)))
+    (explist
+      (binexp (var (name)) (var (name)))))
   (assign_stmt
-    (var (name))
-    (binexp
-      (binexp (var (name)) (var (name)))
-      (var (name)))))
+    (varlist
+      (var (name)))
+    (explist
+      (binexp
+        (binexp (var (name)) (var (name)))
+        (var (name))))))
 
 ==================
 Handles simple table
@@ -200,9 +234,11 @@ x = { true }
 
 (chunk
   (assign_stmt
-    (var (name))
-    (table
-      (fieldlist (field (boolean))))))
+    (varlist
+      (var (name)))
+    (explist
+      (table
+        (fieldlist (field (boolean)))))))
 
 ==================
 Handles name key tables
@@ -214,11 +250,13 @@ x = { foo = bar, bar = baz }
 
 (chunk
   (assign_stmt
-    (var (name))
-    (table
-      (fieldlist
-        (field (name) (var (name)))
-        (field (name) (var (name)))))))
+    (varlist
+      (var (name)))
+    (explist
+      (table
+        (fieldlist
+          (field (name) (var (name)))
+          (field (name) (var (name))))))))
 
 ==================
 Handles expression key tables
@@ -230,12 +268,14 @@ x = { ["foo"] = bar, [call()] = baz }
 
 (chunk
   (assign_stmt
-    (var (name))
-    (table
-      (fieldlist
-        (field (string) (var (name)))
-        (field
-          (call_stmt
-            (var (name))
-            (arglist))
-          (var (name)))))))
+    (varlist
+      (var (name)))
+    (explist
+      (table
+        (fieldlist
+          (field (string) (var (name)))
+          (field
+            (call_stmt
+              (var (name))
+              (arglist))
+            (var (name))))))))
