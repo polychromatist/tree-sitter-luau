@@ -530,10 +530,12 @@ x = 5 + c :: number
 ---
 
 (chunk
-  (var_stmt
-    (var (name))
-    (binexp
-      (number)
-      (cast
-        (var (name))
-        (namedtype (name))))))
+  (assign_stmt
+    (varlist
+      (var (name)))
+    (explist
+      (binexp
+        (number)
+        (cast
+          (var (name))
+          (namedtype (name)))))))

@@ -20,10 +20,12 @@ do x = true end
 (chunk
   (do_stmt
     (block
-      (var_stmt
-        (var
-          (name))
-        (boolean)))))
+      (assign_stmt
+        (varlist
+          (var
+            (name)))
+        (explist
+          (boolean))))))
 
 ==================
 Do block with multiple statements
@@ -40,14 +42,18 @@ end
 (chunk
   (do_stmt
     (block
-      (var_stmt
-        (var
-          (name))
-        (boolean))
-      (var_stmt
-        (var
-          (name))
-        (boolean))
+      (assign_stmt
+        (varlist
+          (var
+            (name)))
+        (explist
+          (boolean)))
+      (assign_stmt
+        (varlist
+          (var
+            (name)))
+        (explist
+          (boolean)))
       (call_stmt
         (var
           (name))

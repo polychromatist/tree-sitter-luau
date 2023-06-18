@@ -72,7 +72,7 @@
  "end"
 ] @keyword.storage.type)
 
-(callback
+(anon_fn
 [
   "function"
   "end"
@@ -221,7 +221,7 @@
 
 (var . (name) @variable.builtin (#match? @variable.builtin "^(_G|_VERSION|self|bit32|coroutine|debug|math|os|string|table|task|utf8)$"))
 
-(field key: (name) @function.method value: (callback))
+(field key: (name) @function.method value: (anon_fn))
 (call_stmt invoked: (var (name) @function .))
 
 (call_stmt method: (name) @function.method)

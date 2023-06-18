@@ -4,7 +4,7 @@
 (local_fn_stmt
   body: (_) @function.inside) @function.around
 
-(callback
+(anon_fn
   body: (_) @function.inside) @function.around
 
 (param

@@ -17,7 +17,7 @@
  (for_in_stmt)
  (fn_stmt)
  (local_fn_stmt)
- (callback)
+ (anon_fn)
 ] @local.scope
 
 ; Definitions
@@ -36,14 +36,12 @@
 
 (fn_stmt
   . name: (name) @local.definition)
-;  (#set! definition.function.scope "parent")
 
 (local_fn_stmt
   (name) @local.definition)
 
 (fn_stmt
   method: (name) @local.definition)
-;  (#set! definition.method.scope "parent")
 
 (for_in_stmt
   (binding (name) @local.definition))

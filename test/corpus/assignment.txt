@@ -7,10 +7,12 @@ x = 1
 ---
 
 (chunk
-  (var_stmt
-    (var
-      (name))
-    (number)))
+  (assign_stmt
+    (varlist
+      (var
+        (name)))
+    (explist
+      (number))))
 
 ==================
 Multiple variable assignment
@@ -21,13 +23,16 @@ a, b = 1, true
 ---
 
 (chunk
-  (var_stmt
-    (var
-      (name))
-    (var
-      (name))
-    (number)
-    (boolean)))
+  (assign_stmt
+    (varlist
+      (var
+        (name))
+      (var
+        (name)))
+    (explist
+      (number)
+      (boolean))))
+      
 
 ==================
 Complex variable assignment
@@ -38,39 +43,41 @@ a, b, c.d.e[f][g][1], h:i().j[k]:l()[m] = true, false, 1, 4
 ---
 
 (chunk
-  (var_stmt
-    (var
-      (name))
-    (var
-      (name))
-    (var
-      (name)
-      (name)
-      (name)
+  (assign_stmt
+    (varlist
       (var
         (name))
       (var
         (name))
-      (number))
-    (var
-      (call_stmt
-        (var
-          (call_stmt
-            (var
-              (name))
-            (name)
-            (arglist))
-          (name)
-          (var
-            (name)))
+      (var
         (name)
-        (arglist))
+        (name)
+        (name)
+        (var
+          (name))
+        (var
+          (name))
+        (number))
       (var
-        (name)))
-    (boolean)
-    (boolean)
-    (number)
-    (number)))
+        (call_stmt
+          (var
+            (call_stmt
+              (var
+                (name))
+              (name)
+              (arglist))
+            (name)
+            (var
+              (name)))
+          (name)
+          (arglist))
+        (var
+          (name))))
+      (explist
+        (boolean)
+        (boolean)
+        (number)
+        (number))))
 
 ==================
 Local variable declaration, no assignment

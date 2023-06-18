@@ -731,16 +731,26 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "_varlist"
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_varlist"
+          },
+          "named": true,
+          "value": "varlist"
         },
         {
           "type": "STRING",
           "value": "="
         },
         {
-          "type": "SYMBOL",
-          "name": "_explist"
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_explist"
+          },
+          "named": true,
+          "value": "explist"
         }
       ]
     },
