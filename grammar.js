@@ -62,6 +62,7 @@ module.exports = grammar({
     statement: $ =>
       choice(
         $.var_stmt,
+        $.assign_stmt,
         $.call_stmt,
         $.local_var_stmt,
         $.break_stmt,
@@ -134,7 +135,8 @@ module.exports = grammar({
 
     local_var_stmt: $ => seq("local", $._bindinglist, optional(seq("=", $._explist))),
 
-    var_stmt: $ => seq($._varlist, $._assign, $._explist),
+    var_stmt: $ => seq($.var, $._assign, $.exp),
+    assign_stmt: $ => seq($._varlist, "=", $._explist),
     _varlist: $ => _list_strict($.var, ","),
 
     type_stmt: $ => seq(
@@ -156,7 +158,6 @@ module.exports = grammar({
     _type_stmt_packlist: $ => _list_strict($.genpackdef, ","),
 
     _assign: () => choice(
-      "=",
       "+=",
       "-=",
       "*=",
@@ -173,7 +174,7 @@ module.exports = grammar({
       $.string,
       $.string_interp,
       $.vararg,
-      $.callback,
+      $.anon_fn,
       $.prefixexp,
       $.table,
       $.unexp,
@@ -264,7 +265,7 @@ module.exports = grammar({
     _field_named: $ => seq(".", field("field", $.name)),
     _field_indexed: $ => seq("[", field("field", $.exp), "]"),
 
-    callback: $ => seq("function", $._fn_body),
+    anon_fn: $ => seq("function", $._fn_body),
     _fn_body: $ => seq(
       optional(seq("<", $._genlist, ">")),
       "(", optional($._paramlist), ")",

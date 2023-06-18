@@ -4,15 +4,15 @@
     "named": true,
     "subtypes": [
       {
+        "type": "anon_fn",
+        "named": true
+      },
+      {
         "type": "binexp",
         "named": true
       },
       {
         "type": "boolean",
-        "named": true
-      },
-      {
-        "type": "callback",
         "named": true
       },
       {
@@ -79,6 +79,10 @@
     "type": "statement",
     "named": true,
     "subtypes": [
+      {
+        "type": "assign_stmt",
+        "named": true
+      },
       {
         "type": "break_stmt",
         "named": true
@@ -176,6 +180,54 @@
     ]
   },
   {
+    "type": "anon_fn",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      },
+      "return_type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type",
+            "named": true
+          },
+          {
+            "type": "typepack",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "generic",
+          "named": true
+        },
+        {
+          "type": "genpack",
+          "named": true
+        },
+        {
+          "type": "param",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "arglist",
     "named": true,
     "fields": {},
@@ -185,6 +237,25 @@
       "types": [
         {
           "type": "exp",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "assign_stmt",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "exp",
+          "named": true
+        },
+        {
+          "type": "var",
           "named": true
         }
       ]
@@ -418,54 +489,6 @@
       "types": [
         {
           "type": "arglist",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "callback",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "block",
-            "named": true
-          }
-        ]
-      },
-      "return_type": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "type",
-            "named": true
-          },
-          {
-            "type": "typepack",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "generic",
-          "named": true
-        },
-        {
-          "type": "genpack",
-          "named": true
-        },
-        {
-          "type": "param",
           "named": true
         }
       ]
