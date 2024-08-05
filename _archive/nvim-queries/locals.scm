@@ -1,3 +1,10 @@
+; defined in part due to:
+; (1) https://github.com/nvim-treesitter/nvim-treesitter/blob/master/queries/lua/locals.scm
+; global spec:
+; (2) https://tree-sitter.github.io/tree-sitter/using-parsers#pattern-matching-with-queries
+; nvim extended spec:
+; (3) https://github.com/nvim-treesitter/nvim-treesitter/blob/master/CONTRIBUTING.md#parser-configurations
+
 ; Scopes
 
 [
@@ -29,12 +36,14 @@
 
 (fn_stmt
   . name: (name) @local.definition)
+  (#set! definition.function.scope "parent")
 
 (local_fn_stmt
   (name) @local.definition)
 
 (fn_stmt
-  method: (name) @local.definition)
+  method: (name) @definition.function)
+  (#set! definition.method.scope "parent")
 
 (for_in_stmt
   (binding (name) @local.definition))
@@ -48,4 +57,6 @@
 
 ; References
 
-(var (name) @local.reference)
+[
+  (name)
+] @local.reference
