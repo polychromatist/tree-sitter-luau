@@ -194,9 +194,13 @@
         ]
       },
       "return_type": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
+          {
+            "type": "&",
+            "named": false
+          },
           {
             "type": "type",
             "named": true
@@ -204,6 +208,10 @@
           {
             "type": "typepack",
             "named": true
+          },
+          {
+            "type": "|",
+            "named": false
           }
         ]
       }
@@ -243,6 +251,21 @@
     }
   },
   {
+    "type": "array",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "assign_stmt",
     "named": true,
     "fields": {},
@@ -256,6 +279,21 @@
         },
         {
           "type": "varlist",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "attribute",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "parattr",
           "named": true
         }
       ]
@@ -509,12 +547,20 @@
         ]
       },
       "cast": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
+            "type": "&",
+            "named": false
+          },
+          {
             "type": "type",
             "named": true
+          },
+          {
+            "type": "|",
+            "named": false
           }
         ]
       },
@@ -747,9 +793,13 @@
         ]
       },
       "return_type": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
+          {
+            "type": "&",
+            "named": false
+          },
           {
             "type": "type",
             "named": true
@@ -757,6 +807,10 @@
           {
             "type": "typepack",
             "named": true
+          },
+          {
+            "type": "|",
+            "named": false
           }
         ]
       },
@@ -775,6 +829,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "attribute",
+          "named": true
+        },
         {
           "type": "field",
           "named": true
@@ -1065,6 +1123,71 @@
     }
   },
   {
+    "type": "literal",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "boolean",
+          "named": true
+        },
+        {
+          "type": "littable",
+          "named": true
+        },
+        {
+          "type": "nil",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "litfield",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "literal",
+          "named": true
+        },
+        {
+          "type": "name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "littable",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "litfield",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "local_fn_stmt",
     "named": true,
     "fields": {
@@ -1079,9 +1202,13 @@
         ]
       },
       "return_type": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
+          {
+            "type": "&",
+            "named": false
+          },
           {
             "type": "type",
             "named": true
@@ -1089,6 +1216,10 @@
           {
             "type": "typepack",
             "named": true
+          },
+          {
+            "type": "|",
+            "named": false
           }
         ]
       }
@@ -1097,6 +1228,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "attribute",
+          "named": true
+        },
         {
           "type": "generic",
           "named": true
@@ -1210,6 +1345,48 @@
         },
         {
           "type": "variadic",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "parattr",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "name",
+          "named": true
+        },
+        {
+          "type": "parattr_param",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "parattr_param",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "literal",
+          "named": true
+        },
+        {
+          "type": "littable",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         }
       ]
@@ -1335,8 +1512,16 @@
         "required": false,
         "types": [
           {
+            "type": "&",
+            "named": false
+          },
+          {
             "type": "type",
             "named": true
+          },
+          {
+            "type": "|",
+            "named": false
           }
         ]
       },
@@ -1355,8 +1540,16 @@
         "required": false,
         "types": [
           {
+            "type": "&",
+            "named": false
+          },
+          {
             "type": "type",
             "named": true
+          },
+          {
+            "type": "|",
+            "named": false
           }
         ]
       }
@@ -1790,6 +1983,10 @@
   },
   {
     "type": "?",
+    "named": false
+  },
+  {
+    "type": "@[",
     "named": false
   },
   {

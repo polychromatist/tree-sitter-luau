@@ -1,4 +1,3 @@
-// this code is a modified version of grammar.js in @Azganoth/tree-sitter-lua
 const PREC = {
   OR: 1,
   AND: 2,
@@ -18,10 +17,11 @@ const PREC = {
 
 const WHITESPACE = /\s/;
 const NAME = /[a-zA-Z_][0-9a-zA-Z_]*/;
+const ATTR = /@[0-9a-zA-Z_]+/;
 const DECIMAL_DIGIT = /[0-9]/;
 const HEX_DIGIT = /[0-9a-fA-F]/;
 const BINARY_DIGIT = /[01]/;
-const DIRECTIVE = /--!/;
+// const DIRECTIVE = /--!/;
 
 const _num_und = (digit) => repeat(choice(digit, "_"))
 
@@ -78,9 +78,15 @@ module.exports = grammar({
         $.type_stmt
       ),
 
-    local_fn_stmt: $ => seq("local", "function", $.name, $._fn_body),
+    local_fn_stmt: $ => seq(
+      optional($._attrlist),
+      "local",
+      "function",
+      $.name,
+      $._fn_body),
 
     fn_stmt: $ => seq(
+      optional($._attrlist),
       "function",
       choice(
         field("name", $.name),
@@ -95,6 +101,8 @@ module.exports = grammar({
     //_tbl_ident: $ => choice($.name, $._tbl_field_named),
     //_tbl_field_named: $ => seq($._tbl_ident, $._field_named),
 
+    _attrlist: $ => repeat1($.attribute),
+    
     for_in_stmt: $ => seq(
       "for", $._bindinglist,
       "in", $._explist,
@@ -146,9 +154,9 @@ module.exports = grammar({
       $.name,
       optional(seq("<", $._type_stmt_genlist, ">")),
       "=",
-      $.type
+      $._outertype
     ),
-    genericdef: $ => seq($.generic, optional(seq("=", $.type))),
+    genericdef: $ => seq($.generic, optional(seq("=", $._outertype))),
     _type_stmt_genlist: $ => _list_vrd($.genericdef, $._type_stmt_packlist, ","),
     /*
     _type_stmt_genlist: $ => choice(
@@ -161,11 +169,11 @@ module.exports = grammar({
       "+=",
       "-=",
       "*=",
+      "//=",
       "/=",
       "%=",
       "^=",
-      "..=",
-      "//="),
+      "..="),
 
     exp: $ => choice(
       $.nil,
@@ -197,8 +205,8 @@ module.exports = grammar({
         ["+", PREC.ADDSUB],
         ["-", PREC.ADDSUB],
         ["*", PREC.MULDIV],
-        ["/", PREC.MULDIV],
         ["//", PREC.MULDIV],
+        ["/", PREC.MULDIV],
         ["%", PREC.MULDIV]
       ].map(([op, pri]) =>
         prec.left(pri, seq( field("arg0", $.exp), field("op", op), field("arg1", $.exp) ))),
@@ -209,7 +217,7 @@ module.exports = grammar({
         prec.right(pri, seq( field("arg0", $.exp), field("op", op), field("arg1", $.exp) ))) ),
 
 
-    cast: $ => prec.left(PREC.CAST, seq( field("arg", $.exp), field("op", "::"), field("cast", $.type))),
+    cast: $ => prec.left(PREC.CAST, seq( field("arg", $.exp), field("op", "::"), field("cast", $._outertype))),
 
     unexp: $ => choice(
       ...["not", "#", "-"].map(op =>
@@ -250,7 +258,7 @@ module.exports = grammar({
 
     binding: $ => seq(
       $.name,
-      optional(seq(":", $.type))),
+      optional(seq(":", $._outertype))),
 
     _bindinglist: $ => _list_strict($.binding, ","),
 
@@ -269,7 +277,7 @@ module.exports = grammar({
     _fn_body: $ => seq(
       optional(seq("<", $._genlist, ">")),
       "(", optional($._paramlist), ")",
-      optional(seq(":", field("return_type", choice($.typepack, $.type)))),
+      optional(seq(":", field("return_type", choice($.typepack, $._outertype)))),
       optional(field("body", $.block)),
       "end"),
     _paramlist: $ => _list_vrd(alias($.binding, $.param), alias($._param_vararg, $.param), ","),
@@ -288,6 +296,10 @@ module.exports = grammar({
       $.singleton,
       $.bintype,
       $.untype),
+    // _outertype is type but it can be decorated with an initial "&" or "|"
+    _outertype: $ => seq(
+      optional(choice("&", "|")),
+      $.type),
     /*
     simpletype: $ => choice(
       $._type_nil,
@@ -303,7 +315,7 @@ module.exports = grammar({
       $.name,
       optional(seq("<", $._typeparamlist, ">")))),
 
-    _typelist: $ => prec.dynamic(1, _list_vrd($.type, $._typelist_vrd, ",")),
+    _typelist: $ => prec.dynamic(1, _list_vrd($._outertype, $._typelist_vrd, ",")),
     /*
     _typelist: $ => prec.dynamic(1,
       choice(
@@ -313,9 +325,9 @@ module.exports = grammar({
         $._typelist_vrd)),*/
     _typelist_vrd: $ => prec.dynamic(1, $.variadic),
 
-    wraptype: $ => prec.dynamic(1, seq("(", $.type, ")")),
+    wraptype: $ => prec.dynamic(1, seq("(", $._outertype, ")")),
 
-    typeparam: $ => choice($.type, $.typepack),
+    typeparam: $ => choice($._outertype, $.typepack),
 
     _typeparamlist: $ => _list_strict($.typeparam, ","),
 
@@ -334,7 +346,7 @@ module.exports = grammar({
       choice($.typepack, $.type)),
     _fntype_gen: $ => seq("<", $._genlist, ">"),
     _fntype_wrap: $ => prec.dynamic(0, seq("(", optional($._fntype_paramlist), ")", "->")),
-    _fntype_param: $ => seq(optional(seq($.name, ":")), $.type),
+    _fntype_param: $ => seq(optional(seq($.name, ":")), $._outertype),
     _fntype_paramlist: $ => _list_vrd($._fntype_param, $._fntype_paramlist_vrd, ","),
     /*
     _fntype_parlist: $ => choice(
@@ -344,17 +356,17 @@ module.exports = grammar({
 
     tbtype: $ => seq("{", optional($._tbtype_content), "}"),
     _tbtype_content: $ => choice($._tbtype_kvlist, $._tbtype_array),
-    _tbtype_array: $ => alias($.type, $.array),
+    _tbtype_array: $ => alias($._outertype, $.array),
     _tbtype_kv: $ => choice($._tbtype_index, $._tbtype_prop),
     _tbtype_kvlist: $ => _list($._tbtype_kv, $.fieldsep),
-    _tbtype_index: $ => seq("[", field("index", $.type), "]", ":", field("value", $.type)),
-    _tbtype_prop: $ => seq(field("prop", $.name), ":", field("value", $.type)),
+    _tbtype_index: $ => seq("[", field("index", $._outertype), "]", ":", field("value", $._outertype)),
+    _tbtype_prop: $ => seq(field("prop", $.name), ":", field("value", $._outertype)),
 
     bintype: $ => choice(
       ...[
         ["&", PREC.TYPEAND], 
         ["|", PREC.TYPEOR]
-      ].map(([op, pri]) => 
+      ].map( ([op, pri]) => 
           prec.left(pri, seq(field("arg0", $.type), field("op", op), field("arg1", $.type))) ),
       ),
 
@@ -385,6 +397,32 @@ module.exports = grammar({
     nil: () => "nil",
 
     name: () => NAME,
+    
+    attribute: $ => choice(
+      ATTR,
+      seq("@[", $._parattrlist, "]")),
+    _parattrlist: $ => _list_strict($.parattr, ","),
+
+    parattr: $ => seq($.name, $.parattr_param),
+    parattr_param: $ => choice(
+      seq("(", optional($._litlist), ")"),
+      $.littable,
+      $.string),
+
+    literal: $ => choice(
+      $.nil,
+      $.boolean,
+      $.number,
+      $.string,
+      $.littable),
+    _litlist: $ => _list_strict($.literal, ","),
+
+    littable: $ => seq(
+      "{",
+      optional($._litfieldlist),
+      "}"),
+    _litfieldlist: $ => _list($.litfield, ","),
+    litfield: $ => seq(optional(seq($.name, "=")), $.literal),
 
     comment: $ => seq($._comment_start, optional($._comment_content), $._comment_end),
   },

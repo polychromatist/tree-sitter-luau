@@ -1,6 +1,9 @@
 #include <tree_sitter/parser.h>
 #include <wctype.h>
 
+#define IS_LINE_CUT(lexer) (lexer->eof(lexer) || lexer->lookahead == '\n')
+#define IS_LINE_NOT_CUT(lexer) (!lexer->eof(lexer) && lexer->lookahead != '\n')
+
 enum TokenType
 {
   COMMENT_START,
@@ -37,6 +40,14 @@ static bool consume_if(TSLexer *lexer, const int32_t character)
 static bool skipwspace(TSLexer *lexer)
 {
   if (iswspace(lexer->lookahead) || lexer->lookahead == '\r') {
+    skip(lexer);
+    return true;
+  }
+  return false;
+}
+static bool skip_if(TSLexer *lexer, const int32_t character)
+{
+  if (lexer->lookahead == character) {
     skip(lexer);
     return true;
   }
@@ -126,55 +137,203 @@ static bool scan_depth(TSLexer *lexer, unsigned int remaining_depth)
 static bool escape_handler(TSLexer *lexer)
 {
   
-  if (consume_if(lexer, '\\') && !lexer->eof(lexer))
+  if (consume_if(lexer, '\\'))
   {
-    if (lexer->lookahead == '\r') {
-      skip(lexer);
-      if (!lexer->eof(lexer) && lexer->lookahead == '\n') {
-        skip(lexer);
-      }
+    if (lexer->eof(lexer)) {
+      return false;
     }
-    else if (lexer->lookahead == '\n') {
-      skip(lexer);
+    else if (consume_if(lexer, '\r') || lexer->lookahead == '\n') {
+      if (!lexer->eof(lexer) && skip_if(lexer, '\n')) {
+        if (!lexer->eof(lexer) && lexer->lookahead == '\\') {
+          return escape_handler(lexer);
+        }
+      }
     }
     else if (consume_if(lexer, 'z') && !lexer->eof(lexer))
     {
       while (skipwspace(lexer) && !lexer->eof(lexer));
+      if (!lexer->eof(lexer) && lexer->lookahead == '\\') {
+        return escape_handler(lexer);
+      }
       return true;
     }
   }
   return false;
 }
 
+static bool process_comment(struct ScannerState *state, TSLexer *lexer, const bool *valid_symbols)
+{
+  if (IS_LINE_CUT(lexer)) {
+    if (valid_symbols[COMMENT_END])
+    {
+      // try to match the short comment's end (new line or eof)
+      state->started = state->idepth > 0 ? INTERP_EXPRESSION : 0;
+
+      lexer->result_symbol = COMMENT_END;
+      return true;
+    }
+  }
+  else if (valid_symbols[COMMENT_CONTENT])
+  {
+    // consume all characters till a short comment's end
+    do { consume(lexer); } while (IS_LINE_NOT_CUT(lexer));
+
+    lexer->result_symbol = COMMENT_CONTENT;
+    
+    return true;
+  }
+
+  return false;
+}
+
+static bool process_string(struct ScannerState *state, TSLexer *lexer, const bool *valid_symbols, const char delimiter)
+{
+  // try to match the short string's end (" or ')
+  if (consume_if(lexer, delimiter) && valid_symbols[STRING_END])
+  {
+      state->started = state->idepth > 0 ? INTERP_EXPRESSION : 0;
+
+      lexer->result_symbol = STRING_END;
+      return true;
+  }
+  else if (IS_LINE_NOT_CUT(lexer) && valid_symbols[STRING_CONTENT])
+  {
+    // consume any character till a short string's end
+    // invoke escape handler for all backslash and z escapes
+    do
+    {
+      escape_handler(lexer);
+      
+      consume(lexer);
+    } while (IS_LINE_NOT_CUT(lexer) && lexer->lookahead != delimiter);
+
+    lexer->result_symbol = STRING_CONTENT;
+    return true;
+  }
+  
+  return false;
+}
+
+static bool process_tstring(struct ScannerState *state, TSLexer *lexer, const bool *valid_symbols, const char delimiter)
+{
+  if (consume_if(lexer, delimiter))
+  {
+    if (valid_symbols[INTERP_END])
+    {
+      state->started = state->idepth > 0 ? INTERP_EXPRESSION : 0;
+    
+      lexer->result_symbol = INTERP_END;
+      return true;
+    }
+  }
+  else if (consume_if(lexer, '{')) {
+    state->idepth++;
+    state->started = INTERP_EXPRESSION;
+    lexer->result_symbol = INTERP_BRACE_OPEN;
+    return true;
+  } 
+  else if (IS_LINE_NOT_CUT(lexer) && valid_symbols[INTERP_CONTENT])
+  {
+    do
+    { 
+      if (lexer->lookahead == '{') {
+        break;
+      }
+      else
+      {
+        if (escape_handler(lexer))
+          continue;
+      }
+    
+      consume(lexer);
+    } while (IS_LINE_NOT_CUT(lexer) && lexer->lookahead != delimiter);
+  
+    lexer->result_symbol = INTERP_CONTENT;
+    return true;           
+  }
+
+  return false;
+}
+
+static bool process_mline(struct ScannerState *state, TSLexer *lexer, const bool *valid_symbols, const bool comment)
+{
+  bool consumed = false;
+
+  if (comment ? valid_symbols[COMMENT_END] : valid_symbols[STRING_END])
+  {
+    // try to match the long comment's/string's end (]=*])
+    if (consume_if(lexer, ']'))
+    {
+      if (scan_depth(lexer, state->depth) && consume_if(lexer, ']'))
+      {
+        state->started = state->idepth > 0 ? INTERP_EXPRESSION : 0;
+        state->depth = 0;
+
+        lexer->result_symbol = comment ? COMMENT_END : STRING_END;
+        return true;
+      }
+
+      consumed = true;
+    }
+  }
+
+  if (comment ? valid_symbols[COMMENT_CONTENT] : valid_symbols[STRING_CONTENT])
+  {
+    if (!consumed)
+    {
+      if (lexer->eof(lexer))
+      {
+        return false;
+      }
+
+      // consume the next character as it can't start a long comment's/string's end ([)
+      consume(lexer);
+    }
+
+    // consume any character till a long comment's/string's end or eof
+    while (true)
+    {
+      lexer->mark_end(lexer);
+      
+      if (consume_if(lexer, ']'))
+      {
+        if (scan_depth(lexer, state->depth))
+        {
+          if (consume_if(lexer, ']'))
+          {
+            break;
+          }
+        }
+        else
+        {
+          continue;
+        }
+      }
+
+      if (lexer->eof(lexer))
+      {
+        break;
+      }
+
+      consume(lexer);
+    }
+    
+    lexer->result_symbol = comment ? COMMENT_CONTENT : STRING_CONTENT;
+    return true;
+  }
+  
+  return false;
+}
+
 bool tree_sitter_luau_external_scanner_scan(void *payload, TSLexer *lexer, const bool *valid_symbols)
 {
   struct ScannerState *state = payload;
+  
   switch (state->started)
   {
     case SHORT_COMMENT:
     {
-        // try to match the short comment's end (new line or eof)
-        if (lexer->lookahead == '\n' || lexer->eof(lexer))
-        {
-          if (valid_symbols[COMMENT_END])
-          {
-            state->started = state->idepth > 0 ? INTERP_EXPRESSION : 0;
-
-            lexer->result_symbol = COMMENT_END;
-            return true;
-          }
-        }
-        else if (valid_symbols[COMMENT_CONTENT])
-        {
-          // consume all characters till a short comment's end
-          do
-          {
-            consume(lexer);
-          } while (lexer->lookahead != '\n' && !lexer->eof(lexer));
-
-          lexer->result_symbol = COMMENT_CONTENT;
-          return true;
-        }
+        if (process_comment(state, lexer, valid_symbols)) return true;
 
         break;
     }
@@ -184,77 +343,15 @@ bool tree_sitter_luau_external_scanner_scan(void *payload, TSLexer *lexer, const
         // define the short string's delimiter
         const char delimiter = state->started == SHORT_SQ_STRING ? SQ_STRING_DELIMITER : DQ_STRING_DELIMITER;
 
-        // try to match the short string's end (" or ')
-        if (consume_if(lexer, delimiter))
-        {
-          if (valid_symbols[STRING_END])
-          {
-            state->started = state->idepth > 0 ? INTERP_EXPRESSION : 0;
-
-            lexer->result_symbol = STRING_END;
-            return true;
-          }
-        }
-        else if (lexer->lookahead != '\n' && !lexer->eof(lexer))
-        {
-          if (valid_symbols[STRING_CONTENT]) {
-            // consume any character till a short string's end, new line or eof
-            do
-            {
-              escape_handler(lexer);
-              
-              consume(lexer);
-            } while (lexer->lookahead != delimiter && lexer->lookahead != '\n' && !lexer->eof(lexer));
-
-            lexer->result_symbol = STRING_CONTENT;
-            return true;
-          }
-        }
+        if (process_string(state, lexer, valid_symbols, delimiter)) return true;
 
         break;
     }
     case TICK_STRING:
     {
         const char delimiter = TICK_DELIMITER;
-        
-        if (consume_if(lexer, delimiter))
-        {
-          if (valid_symbols[INTERP_END])
-          {
-            state->started = state->idepth > 0 ? INTERP_EXPRESSION : 0;
-            
-            lexer->result_symbol = INTERP_END;
-            return true;
-          }
-        }
-        else if (consume_if(lexer, '{')) {
-          state->idepth++;
-          state->started = INTERP_EXPRESSION;
-          lexer->result_symbol = INTERP_BRACE_OPEN;
-          return true;
-        } 
-        else if (lexer->lookahead != '\n' && !lexer->eof(lexer))
-        {
-          if (valid_symbols[INTERP_CONTENT])
-          {
-            do
-            { 
-              if (lexer->lookahead == '{') {
-                break;
-              }
-              else
-              {
-                if (escape_handler(lexer))
-                  continue;
-              }
-              
-              consume(lexer);
-            } while (lexer->lookahead != delimiter && lexer->lookahead != '\n' && !lexer->eof(lexer));
-            
-            lexer->result_symbol = INTERP_CONTENT;
-            return true;           
-          }
-        }
+
+        if (process_tstring(state, lexer, valid_symbols, delimiter)) return true;
         
         break;
     }
@@ -263,70 +360,8 @@ bool tree_sitter_luau_external_scanner_scan(void *payload, TSLexer *lexer, const
     {
         const bool is_inside_a_comment = state->started == LONG_COMMENT;
 
-        bool some_characters_were_consumed = false;
-        if (is_inside_a_comment ? valid_symbols[COMMENT_END] : valid_symbols[STRING_END])
-        {
-          // try to match the long comment's/string's end (]=*])
-          if (consume_if(lexer, ']'))
-          {
-            if (scan_depth(lexer, state->depth) && consume_if(lexer, ']'))
-            {
-              state->started = state->idepth > 0 ? INTERP_EXPRESSION : 0;
-              state->depth = 0;
-
-              lexer->result_symbol = is_inside_a_comment ? COMMENT_END : STRING_END;
-              return true;
-            }
-
-            some_characters_were_consumed = true;
-          }
-        }
-
-        if (is_inside_a_comment ? valid_symbols[COMMENT_CONTENT] : valid_symbols[STRING_CONTENT])
-        {
-          if (!some_characters_were_consumed)
-          {
-            if (lexer->eof(lexer))
-            {
-              break;
-            }
-
-            // consume the next character as it can't start a long comment's/string's end ([)
-            consume(lexer);
-          }
-
-          // consume any character till a long comment's/string's end or eof
-          while (true)
-          {
-            lexer->mark_end(lexer);
-            if (consume_if(lexer, ']'))
-            {
-              if (scan_depth(lexer, state->depth))
-              {
-                if (consume_if(lexer, ']'))
-                {
-                  break;
-                }
-              }
-              else
-              {
-                continue;
-              }
-            }
-
-            if (lexer->eof(lexer))
-            {
-              break;
-            }
-
-            consume(lexer);
+        if (process_mline(state, lexer, valid_symbols, is_inside_a_comment)) return true;
         
-          }
-
-          lexer->result_symbol = is_inside_a_comment ? COMMENT_CONTENT : STRING_CONTENT;
-          return true;
-        }
-
         break;
     }
     case INTERP_EXPRESSION:

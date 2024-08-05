@@ -144,6 +144,7 @@
  "}"
 ] @punctuation.bracket
 
+(attribute) @attribute
 
 (exp (vararg) @constant)
 
@@ -171,7 +172,7 @@
 
 (_ table: (name) @variable.builtin (#eq? @variable.builtin "bit32")
    . (name)? @function.builtin
-   (#match? @function.builtin "^(arshift|lrotate|lshift|replace|rrotate|rshift|btest|bxor|band|bnot|bor|countlz|countrz|extract)$")
+   (#match? @function.builtin "^(arshift|lrotate|lshift|replace|rrotate|rshift|btest|bxor|band|bnot|bor|countlz|countrz|extract|byteswap)$")
 )
 
 (_ table: (name) @variable.builtin (#eq? @variable.builtin "coroutine")
@@ -211,15 +212,25 @@
 
 (_ table: (name) @variable.builtin (#eq? @variable.builtin "task")
    . (name)? @function.builtin
-   (#match? @function.builtin "^(cancel|defer|delay|desynchronize|spawn|wait)$")
+   (#match? @function.builtin "^(cancel|defer|delay|synchronize|desynchronize|spawn|wait)$")
 )
 
 (_ table: (name) @variable.builtin (#eq? @variable.builtin "utf8")
    . (name)? @function.builtin
-   (#match? @function.builtin "^(char|charpattern|codepoint|codes|graphemes|len|offset|nfcnormalize|nfdnormalize)$")
+   (#match? @function.builtin "^(char|codepoint|codes|graphemes|len|offset|nfcnormalize|nfdnormalize)$")
 )
 
-(var . (name) @variable.builtin (#match? @variable.builtin "^(_G|_VERSION|self|bit32|coroutine|debug|math|os|string|table|task|utf8)$"))
+(_ table: (name) @variable.builtin (#eq? @variable.builtin "utf8")
+   . (name)? @constant.builtin
+   (#match? @constant.builtin "^(charpattern)$")
+)
+
+(_ table: (name) @variable.builtin (#eq? @variable.builtin "buffer")
+  . (name)? @function.builtin
+  (#match? @function.builtin "^(create|fromstring|tostring|len|copy|fill|readi8|readu8|readi16|readu16|readi32|readu32|readf32|readf64|writei8|writeu8|writei16|writeu16|writei32|writeu32|writef32|writef64|readstring|writestring)$")
+)
+
+(var . (name) @variable.builtin (#match? @variable.builtin "^(_G|_VERSION|self|bit32|coroutine|debug|math|os|string|table|task|utf8|buffer)$"))
 
 (field key: (name) @function.method value: (anon_fn))
 (call_stmt invoked: (var (name) @function .))

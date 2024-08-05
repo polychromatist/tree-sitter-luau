@@ -10,8 +10,9 @@ node_modules/
 /outfile.txt
 queries/
 /*.luau
-/aftman.toml
+local/
+aftman.toml
 Cargo.lock
 *.wasm
 *.wat
-/compile_flags.txt
+compile_flags.txt

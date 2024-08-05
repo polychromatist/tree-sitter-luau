@@ -539,3 +539,99 @@ x = 5 + c :: number
         (cast
           (var (name))
           (namedtype (name)))))))
+
+==================
+Attribute on function declaration
+==================
+
+@native
+function evenlist(n: number): {number}
+  local t = table.create(n, 0)
+  for i = 1, n do
+    local y = i * 2
+    t[i] = y
+  end
+  return t
+end
+
+---
+
+(chunk
+  (fn_stmt
+    (attribute)
+    name: (name)
+    (param
+      (name)
+      (namedtype
+        (name)))
+    return_type: (tbtype
+      (array
+        (namedtype
+          (name))))
+    body: (block
+      (local_var_stmt
+        (binding
+          (name))
+        (call_stmt
+          invoked: (var
+            table: (name)
+            field: (name))
+          (arglist
+            (var
+              (name))
+            (number))))
+      (for_range_stmt
+        (binding
+          (name))
+        start: (number)
+        stop: (var
+          (name))
+        body: (block
+          (local_var_stmt
+            (binding
+              (name))
+            (binexp
+              arg0: (var
+                (name))
+              arg1: (number)))
+          (assign_stmt
+            (varlist
+              (var
+                table: (name)
+                field: (var
+                  (name))))
+            (explist
+              (var (name))))))
+      (ret_stmt
+        (var
+          (name))))))
+
+==================
+Parameterized attribute on a function declaration
+==================
+
+@[deprecated "Please use destroy() instead."]
+local function remove(x)
+  x.Parent = nil
+end
+
+---
+
+(chunk
+  (local_fn_stmt
+    (attribute
+      (parattr
+        (name)
+        (parattr_param
+          (string))))
+    (name)
+    (param
+      (name))
+    body: (block
+      (assign_stmt
+        (varlist
+          (var
+            table: (name)
+            field: (name)))
+        (explist
+          (nil))))))
