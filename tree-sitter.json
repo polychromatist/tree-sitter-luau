@@ -7,7 +7,7 @@
       "scope": "source.luau",
       "file-types": ["luau", "lua"],
       "first-line-regex": "--!(?:strict|nonstrict|nocheck|native)$",
-      "content-regex": "\\<(?:^[@]|^[^\"'][`]|^\\s*local\\s+\\w+\\s*[:])\\>",
+      "content-regex": "^[@]|^[^\"'][`]|^\\s*local\\s+\\w+\\s*[:]",
       "injection-regex": "^luau$",
       "external-files": [
         "src/luauts_pcg_hash_table.h"
