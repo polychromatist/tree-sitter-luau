@@ -46,33 +46,42 @@ a, b, c.d.e[f][g][1], h:i().j[k]:l()[m] = true, false, 1, 4
   (assign_stmt
     (varlist
       (var
-        (name))
+        variable_name: (name))
       (var
-        (name))
+        variable_name: (name))
       (var
-        (name)
-        (name)
-        (name)
-        (var
-          (name))
-        (var
-          (name))
-        (number))
+        table_name: (name)
+        (key
+          field_name: (name))
+        (key
+          field_name: (name))
+        (key
+          field_indexer: (var
+            variable_name: (name)))
+        (key
+          field_indexer: (var
+            variable_name: (name)))
+        (key
+          field_indexer:
+            (number)))
       (var
         (call_stmt
-          (var
+          method_table: (var
             (call_stmt
-              (var
-                (name))
-              (name)
+              method_table: (var
+                variable_name: (name))
+              method_name: (name)
               (arglist))
-            (name)
-            (var
-              (name)))
-          (name)
+            (key
+              field_name: (name))
+            (key
+              field_indexer: (var
+                variable_name: (name))))
+          method_name: (name)
           (arglist))
-        (var
-          (name))))
+        (key
+          field_indexer: (var
+            variable_name: (name)))))
       (explist
         (boolean)
         (boolean)
@@ -89,8 +98,9 @@ local x
 
 (chunk
   (local_var_stmt
-    (binding
-      (name))))
+    (bindinglist
+      (binding
+        (name)))))
 
 ==================
 Local variable declaration
@@ -102,9 +112,11 @@ local x = 1
 
 (chunk
   (local_var_stmt
-    (binding
-      (name))
-    (number)))
+    (bindinglist
+      (binding
+        (name)))
+    (explist
+      (number))))
 
 ==================
 Multiple Local variable declaration, no assignment
@@ -116,10 +128,11 @@ local x, y
 
 (chunk
   (local_var_stmt
-    (binding
-      (name))
-    (binding
-      (name))))
+    (bindinglist
+      (binding
+        (name))
+      (binding
+        (name)))))
 
 ==================
 Multiple Local variable declaration
@@ -131,12 +144,14 @@ local x, y = 1, false
 
 (chunk
   (local_var_stmt
-    (binding
-      (name))
-    (binding
-      (name))
-    (number)
-    (boolean)))
+    (bindinglist
+      (binding
+        (name))
+      (binding
+        (name)))
+    (explist
+      (number)
+      (boolean))))
 
 ==================
 Luau: Compound assignment
@@ -148,6 +163,6 @@ a += 1
 
 (chunk
   (var_stmt
-    (var
-      (name))
-    (number)))
+    left: (var
+      variable_name: (name))
+    right: (number)))

@@ -91,7 +91,9 @@ end
     (boolean)
     (block
       (local_var_stmt
-        (binding
-          (name))
-        (boolean))
+        (bindinglist
+          (binding
+            (name)))
+        (explist
+          (boolean)))
       (continue_stmt))))

@@ -94,7 +94,8 @@ x = -1
       (var
         (name)))
     (explist
-      (number))))
+      (unexp
+        (number)))))
 
 ==================
 Handles exponential number
@@ -238,7 +239,7 @@ x = { true }
       (var (name)))
     (explist
       (table
-        (fieldlist (field (boolean)))))))
+        (field (boolean))))))
 
 ==================
 Handles name key tables
@@ -251,12 +252,18 @@ x = { foo = bar, bar = baz }
 (chunk
   (assign_stmt
     (varlist
-      (var (name)))
+      (var
+        variable_name: (name)))
     (explist
       (table
-        (fieldlist
-          (field (name) (var (name)))
-          (field (name) (var (name))))))))
+        (field
+          field_name: (name)
+          value: (var 
+            variable_name: (name)))
+        (field
+          field_name: (name)
+          value: (var
+            variable_name: (name)))))))
 
 ==================
 Handles expression key tables
@@ -269,13 +276,18 @@ x = { ["foo"] = bar, [call()] = baz }
 (chunk
   (assign_stmt
     (varlist
-      (var (name)))
+      (var 
+        variable_name: (name)))
     (explist
       (table
-        (fieldlist
-          (field (string) (var (name)))
-          (field
-            (call_stmt
-              (var (name))
-              (arglist))
-            (var (name))))))))
+        (field
+          field_indexer: (string)
+          value: (var
+            variable_name: (name)))
+        (field
+          field_indexer: (call_stmt
+            invoked: (var
+              variable_name: (name))
+            (arglist))
+          value: (var
+            variable_name: (name)))))))

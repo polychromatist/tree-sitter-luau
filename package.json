@@ -1,45 +1,63 @@
 {
   "name": "tree-sitter-luau",
-  "version": "0.0.4",
-  "description": "luau grammar for tree-sitter",
+  "version": "0.2.0",
+  "description": "Luau grammar for tree-sitter",
+  "repository": "github:polychromatist/tree-sitter-luau",
+  "author": "polychromatist <polychromatist@proton.me>",
+  "contributors": [],
+  "license": "MIT",
   "main": "bindings/node",
   "types": "bindings/node",
-  "keywords": ["parsing", "incremental"],
+  "keywords": [
+    "incremental",
+    "parsing",
+    "tree-sitter",
+    "luau"
+  ],
   "files": [
     "grammar.js",
     "binding.gyp",
     "prebuilds/**",
     "bindings/node/*",
     "queries/*",
-    "src/**"
+    "src/**",
+    "*.wasm"
   ],
   "dependencies": {
-    "node-addon-api": "^7.1.0",
-    "node-gyp-build": "^4.8.0"
+    "node-addon-api": "^8.0.0",
+    "node-gyp-build": "^4.8.1"
+  },
+  "devDependencies": {
+    "prebuildify": "^6.0.1",
+    "tree-sitter-cli": "^0.23.2"
   },
   "peerDependencies": {
-    "tree-sitter": "^0.21.0"
+    "tree-sitter": "^0.21.1"
   },
   "peerDependenciesMeta": {
-    "tree_sitter": {
+    "tree-sitter": {
       "optional": true
     }
   },
-  "devDependencies": {
-    "tree-sitter-cli": "^0.20.7",
-    "prebuildify": "^6.0.0"
-  },
   "scripts": {
-    "build": "tree-sitter generate && node-gyp build --debug",
-    "test": "tree-sitter test",
     "install": "node-gyp-build",
-    "prebuildify": "prebuildify --napi --strip"
+    "prestart": "tree-sitter build --wasm",
+    "start": "tree-sitter playground",
+    "test": "node --test bindings/node/*_test.js"
   },
   "tree-sitter": [
     {
       "scope": "source.luau",
-      "file-types": ["luau"],
-      "first-line-regex": "--!(?:strict|nonstrict|nocheck)$"
+      "file-types": ["luau", "lua"],
+      "first-line-regex": "--!(?:strict|nonstrict|nocheck|native)$",
+      "content-regex": "\\<(?:^[@]|^[^\"'][`]|^\\s*local\\s+\\w+\\s*[:])\\>",
+      "injection-regex": "^luau$",
+      "external-files": [
+        "src/luauts_pcg_hash_table.h"
+      ],
+      "highlights": "helix-queries\\highlights.scm",
+      "locals": "helix-queries\\locals.scm",
+      "injections": "helix-queries\\injections.scm"
     }
   ]
 }

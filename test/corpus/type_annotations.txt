@@ -234,7 +234,7 @@ type Foo = () -> number
   (type_stmt
     (name)
     (fntype
-      (paramlist)
+      (paramtypelist)
       (namedtype (name)))))
 
 ==================
@@ -249,7 +249,7 @@ type Foo = (string, number) -> number
   (type_stmt
     (name)
     (fntype
-      (paramlist
+      (paramtypelist
         (namedtype (name))
         (namedtype (name)))
       (namedtype (name)))))
@@ -266,7 +266,7 @@ type Foo = (string, number) -> ()
   (type_stmt
     (name)
     (fntype
-      (paramlist
+      (paramtypelist
         (namedtype (name))
         (namedtype (name)))
       (typepack))))
@@ -283,12 +283,13 @@ type Foo = (string, number) -> (number, string)
   (type_stmt
     (name)
     (fntype
-      (paramlist
+      (paramtypelist
         (namedtype (name))
         (namedtype (name)))
       (typepack
-        (namedtype (name))
-        (namedtype (name))))))
+        (typelist
+          (namedtype (name))
+          (namedtype (name)))))))
 
 ==================
 Function variadic argument type declaration
@@ -302,7 +303,7 @@ type Foo = (string, ...number) -> ()
   (type_stmt
     (name)
     (fntype
-      (paramlist
+      (paramtypelist
         (namedtype (name))
         (variadic (namedtype (name))))
       (typepack))))
@@ -319,7 +320,7 @@ type Foo = (string, number) -> ...number
   (type_stmt
     (name)
     (fntype
-      (paramlist
+      (paramtypelist
         (namedtype (name))
         (namedtype (name)))
       (typepack (variadic (namedtype (name)))))))
@@ -336,7 +337,7 @@ type Foo = (string, count: number) -> string
   (type_stmt
     (name)
     (fntype
-      (paramlist
+      (paramtypelist
         (namedtype (name))
         (name) (namedtype (name)))
       (namedtype (name)))))
@@ -383,10 +384,12 @@ local x: number = 3
 
 (chunk
   (local_var_stmt
-    (binding
-      (name)
-      (namedtype (name)))
-  (number)))
+    (bindinglist
+      (binding
+        (name)
+        (namedtype (name))))
+    (explist
+      (number))))
 
 ==================
 Multiple Local Assignment type specifier
@@ -398,16 +401,18 @@ local x: number, y, z: string = 3, nil, "foo"
 
 (chunk
   (local_var_stmt
-    (binding
-      (name)
-      (namedtype (name)))
-    (binding (name))
-    (binding
-      (name)
-      (namedtype (name)))
-    (number)
-    (nil)
-    (string)))
+    (bindinglist
+      (binding
+        (name)
+        (namedtype (name)))
+      (binding (name))
+      (binding
+        (name)
+        (namedtype (name))))
+    (explist
+      (number)
+      (nil)
+      (string))))
 
 ==================
 Function declaration return type
@@ -435,12 +440,14 @@ end
 
 (chunk
   (fn_stmt
-    (name)
-    (param (name))
-    (param
-      (name)
-      (namedtype
-        (name)))))
+    function_name: (name)
+    (paramlist
+      (param
+        parameter_name: (name))
+      (param
+        parameter_name: (name)
+        type_specifier: (namedtype
+          type_name: (name))))))
 
 ==================
 Function declaration ellipse type
@@ -453,16 +460,18 @@ end
 
 (chunk
   (fn_stmt
-    (name)
-    (param (name))
-    (param
-      (name)
-      (namedtype
-        (name)))
-    (param
-      (vararg)
-      (namedtype
-        (name)))))
+    function_name: (name)
+    (paramlist
+      (param
+        parameter_name: (name))
+      (param
+        parameter_name: (name)
+        type_specifier: (namedtype
+          type_name: (name)))
+      (param
+        (vararg)
+        type_specifier: (namedtype
+          type_name: (name))))))
 
 ==================
 Generic function declaration
@@ -510,16 +519,22 @@ end
 
 (chunk
   (for_in_stmt
-    (binding
-      (name)
-      (namedtype (name)))
-    (binding
-      (name)
-      (namedtype (name)))
-    (call_stmt
-      (var (name))
-      (arglist
-        (var (name))))))
+    (bindinglist
+      (binding
+        variable_name: (name)
+        type_specifier: (namedtype
+          type_name: (name)))
+      (binding
+        variable_name: (name)
+        type_specifier: (namedtype
+          type_name: (name))))
+    (explist
+      (call_stmt
+        invoked: (var
+          variable_name: (name))
+        (arglist
+          (var
+            variable_name: (name)))))))
 
 ==================
 Type assertion 1 
@@ -559,52 +574,61 @@ end
 (chunk
   (fn_stmt
     (attribute)
-    name: (name)
-    (param
-      (name)
-      (namedtype
-        (name)))
+    function_name: (name)
+    (paramlist
+      (param
+        parameter_name: (name)
+        type_specifier: (namedtype
+          type_name: (name))))
     return_type: (tbtype
       (array
         (namedtype
-          (name))))
+          type_name: (name))))
     body: (block
       (local_var_stmt
-        (binding
-          (name))
-        (call_stmt
-          invoked: (var
-            table: (name)
-            field: (name))
-          (arglist
-            (var
-              (name))
-            (number))))
+        (bindinglist
+          (binding
+            variable_name: (name)))
+        (explist
+          (call_stmt
+            invoked: (var
+              table_name: (name)
+              (key
+                field_name: (name)))
+            (arglist
+              (var
+                variable_name: (name))
+              (number)))))
       (for_range_stmt
         (binding
-          (name))
+          variable_name: (name))
         start: (number)
         stop: (var
-          (name))
+          variable_name: (name))
         body: (block
           (local_var_stmt
-            (binding
-              (name))
-            (binexp
-              arg0: (var
-                (name))
-              arg1: (number)))
+            (bindinglist
+              (binding
+                variable_name: (name)))
+            (explist
+              (binexp
+                left: (var
+                  variable_name: (name))
+                right: (number))))
           (assign_stmt
             (varlist
               (var
-                table: (name)
-                field: (var
-                  (name))))
+                table_name: (name)
+                (key
+                  field_indexer: (var
+                    variable_name: (name)))))
             (explist
-              (var (name))))))
+              (var
+                variable_name: (name))))))
       (ret_stmt
-        (var
-          (name))))))
+        (explist
+          (var
+            variable_name: (name)))))))
 
 ==================
 Parameterized attribute on a function declaration
@@ -621,17 +645,19 @@ end
   (local_fn_stmt
     (attribute
       (parattr
-        (name)
+        attribute_name: (name)
         (parattr_param
           (string))))
-    (name)
-    (param
-      (name))
+    function_name: (name)
+    (paramlist
+      (param
+        parameter_name: (name)))
     body: (block
       (assign_stmt
         (varlist
           (var
-            table: (name)
-            field: (name)))
+            table_name: (name)
+            (key
+              field_name: (name))))
         (explist
           (nil))))))

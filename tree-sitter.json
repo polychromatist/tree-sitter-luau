@@ -1,0 +1,43 @@
+{
+  "grammars": [
+    {
+      "name": "luau",
+      "camelcase": "Luau",
+      "path": ".",
+      "scope": "source.luau",
+      "file-types": ["luau", "lua"],
+      "first-line-regex": "--!(?:strict|nonstrict|nocheck|native)$",
+      "content-regex": "\\<(?:^[@]|^[^\"'][`]|^\\s*local\\s+\\w+\\s*[:])\\>",
+      "injection-regex": "^luau$",
+      "external-files": [
+        "src/luauts_pcg_hash_table.h"
+      ],
+      "highlights": "helix-queries\\highlights.scm",
+      "locals": "helix-queries\\locals.scm",
+      "injections": "helix-queries\\injections.scm"
+    }
+  ],
+  "metadata": {
+    "version": "0.2.0",
+    "license": "MIT",
+    "description": "Tree-sitter grammar for Luau",
+    "authors": [
+      {
+        "name": "polychromatist",
+        "email": "polychromatist@proton.me",
+        "url": "https://densenet.org"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/polychromatist/tree-sitter-luau"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true
+  }
+}

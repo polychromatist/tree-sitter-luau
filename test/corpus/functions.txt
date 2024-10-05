@@ -23,8 +23,11 @@ end
 (chunk
   (fn_stmt
     (name)
-    (param (name))
-    (param (name))))
+    (paramlist
+      (param
+        (name))
+      (param
+        (name)))))
 
 ==================
 Global function declaration with body
@@ -41,7 +44,8 @@ end
     (name)
     (block
       (ret_stmt
-        (boolean)))))
+        (explist
+          (boolean))))))
 
 ==================
 Complex function name declaration
@@ -54,10 +58,10 @@ end
 
 (chunk
   (fn_stmt
-    (name)
-    (field
-      (name))
-    (name)))
+    table_name: (name)
+    (key
+      field_name: (name))
+    method_name: (name)))
 
 ==================
 Local function declaration
@@ -85,13 +89,22 @@ local function baz(a, b, ...) end
 (chunk
   (local_fn_stmt
     (name)
-    (param (name))
-    (param (name)))
+    (paramlist
+      (param 
+        (name))
+      (param 
+        (name))))
   (local_fn_stmt
     (name)
-    (param (vararg)))
+    (paramlist
+      (param 
+        (vararg))))
   (local_fn_stmt
     (name)
-    (param (name))
-    (param (name))
-    (param (vararg))))
+    (paramlist
+      (param 
+        (name))
+      (param 
+        (name))
+      (param 
+        (vararg)))))
