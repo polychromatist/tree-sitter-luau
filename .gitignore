@@ -16,3 +16,4 @@ Cargo.lock
 *.wasm
 *.wat
 compile_flags.txt
+pnpm-lock.yaml
