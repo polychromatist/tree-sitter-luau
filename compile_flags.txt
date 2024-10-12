@@ -1,2 +1,0 @@
--isystem
-F:\cargo_home\registry\src\index.crates.io-6f17d22bba15001f\tree-sitter-0.20.10\include
