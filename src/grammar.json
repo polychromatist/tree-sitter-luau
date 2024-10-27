@@ -2672,17 +2672,21 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "&"
-                },
-                {
-                  "type": "STRING",
-                  "value": "|"
-                }
-              ]
+              "type": "FIELD",
+              "name": "operator",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": "&"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "|"
+                  }
+                ]
+              }
             },
             {
               "type": "BLANK"
@@ -3215,37 +3219,32 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "_tbtype_kvlist"
+          "name": "kvtypelist"
         },
         {
-          "type": "SYMBOL",
-          "name": "_tbtype_array"
+          "type": "FIELD",
+          "name": "array_type_specifier",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_outertype"
+          }
         }
       ]
-    },
-    "_tbtype_array": {
-      "type": "ALIAS",
-      "content": {
-        "type": "SYMBOL",
-        "name": "_outertype"
-      },
-      "named": true,
-      "value": "array"
     },
     "_tbtype_kv": {
       "type": "CHOICE",
       "members": [
         {
           "type": "SYMBOL",
-          "name": "_tbtype_index"
+          "name": "indexertype"
         },
         {
           "type": "SYMBOL",
-          "name": "_tbtype_prop"
+          "name": "proptype"
         }
       ]
     },
-    "_tbtype_kvlist": {
+    "kvtypelist": {
       "type": "SEQ",
       "members": [
         {
@@ -3282,7 +3281,7 @@
         }
       ]
     },
-    "_tbtype_index": {
+    "indexertype": {
       "type": "SEQ",
       "members": [
         {
@@ -3315,7 +3314,7 @@
         }
       ]
     },
-    "_tbtype_prop": {
+    "proptype": {
       "type": "SEQ",
       "members": [
         {

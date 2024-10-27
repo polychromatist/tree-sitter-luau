@@ -1,6 +1,6 @@
 {
   "name": "@polychromatist/tree-sitter-luau",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Luau grammar for tree-sitter",
   "repository": "github:polychromatist/tree-sitter-luau",
   "author": "polychromatist <polychromatist@proton.me>",

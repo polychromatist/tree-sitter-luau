@@ -563,7 +563,7 @@ module.exports = grammar({
     
     // _outertype is type but it can be decorated with an initial "&" or "|"
     _outertype: $ => seq(
-      optional(choice("&", "|")),
+      optional(field("operator", choice("&", "|"))),
       $.type),
     
     singleton: $ => choice($.string, $.nil, $.boolean),
@@ -628,21 +628,24 @@ module.exports = grammar({
       optional($._tbtype_content),
       "}"
     ),
-    _tbtype_content: $ => choice($._tbtype_kvlist, $._tbtype_array),
-    _tbtype_array: $ => alias($._outertype, $.array),
-    _tbtype_kv: $ => choice(
-      $._tbtype_index,
-      $._tbtype_prop
+    _tbtype_content: $ => choice(
+      $.kvtypelist,
+      field("array_type_specifier", $._outertype)
     ),
-    _tbtype_kvlist: $ => _list($._tbtype_kv, $.fieldsep),
-    _tbtype_index: $ => seq(
+    // _tbtype_array: $ => alias($._outertype, $.array),
+    _tbtype_kv: $ => choice(
+      $.indexertype,
+      $.proptype
+    ),
+    kvtypelist: $ => _list($._tbtype_kv, $.fieldsep),
+    indexertype: $ => seq(
       "[",
       field("indexer_type_specifier", $._outertype),
       "]",
       ":",
       field("value_type_specifier", $._outertype)
     ),
-    _tbtype_prop: $ => seq(
+    proptype: $ => seq(
       field("field_name", $.name),
       ":",
       field("type_specifier", $._outertype)

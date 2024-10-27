@@ -28,6 +28,12 @@
 (
   [
     (arglist)
+  ]
+  (#set! "scope" "all")
+)
+
+(
+  [
     (explist)
     (interp_exp)
   ] @indent.always

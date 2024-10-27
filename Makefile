@@ -4,7 +4,7 @@ endif
 
 LANGUAGE_NAME := tree-sitter-luau
 HOMEPAGE_URL := https://github.com/polychromatist/tree-sitter-luau
-VERSION := 0.2.0
+VERSION := 0.2.2
 
 # repository
 SRC_DIR := src

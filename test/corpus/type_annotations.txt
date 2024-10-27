@@ -49,8 +49,11 @@ type Foo = { string }
 
 (chunk
   (type_stmt
-    (name)
-    (tbtype (array (namedtype (name))))))
+    left: (name)
+    right: (tbtype
+      array_type_specifier: (namedtype
+        type_name: (name)
+      ))))
 
 ==================
 Module type declaration
@@ -352,10 +355,13 @@ type Foo = { foo: string }
 
 (chunk
   (type_stmt
-    (name)
-    (tbtype
-      (name)
-      (namedtype (name)))))
+    left: (name)
+    right: (tbtype
+      (kvtypelist
+        (proptype
+          field_name: (name)
+          type_specifier: (namedtype
+            type_name: (name)))))))
 
 ==================
 Table type declaration with type index
@@ -367,12 +373,14 @@ type Foo = { [number]: string }
 
 (chunk
   (type_stmt
-    (name)
-    (tbtype
-      (namedtype
-        (name))
-      (namedtype
-        (name)))))
+    left: (name)
+    right: (tbtype
+      (kvtypelist
+        (indexertype
+          indexer_type_specifier: (namedtype
+            type_name: (name))
+          value_type_specifier: (namedtype
+            type_name: (name)))))))
 
 ==================
 Local Assignment type specifier
@@ -581,9 +589,8 @@ end
         type_specifier: (namedtype
           type_name: (name))))
     return_type: (tbtype
-      (array
-        (namedtype
-          type_name: (name))))
+      array_type_specifier: (namedtype
+          type_name: (name)))
     body: (block
       (local_var_stmt
         (bindinglist
