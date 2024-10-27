@@ -28,7 +28,7 @@
 (
   [
     (arglist)
-  ]
+  ] @indent
   (#set! "scope" "all")
 )
 
