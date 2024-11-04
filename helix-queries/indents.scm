@@ -5,6 +5,8 @@
   (do_stmt)
   (while_stmt)
   (if_stmt)
+  ; (else_clause)
+  ; (elseif_clause)
   (fn_stmt)
   (local_fn_stmt)
   (anon_fn)
@@ -13,7 +15,6 @@
   (paramlist)
   (paramtypelist)
   (table)
-  ; (exp_wrap)
   (cast)
   (tbtype)
   (dyntype)
@@ -68,15 +69,10 @@
   (#set! "scope" "all")
 )
 
-(
+(_
   (_) @expr-start
   .
-  (
-    [
-      "="   "+=" "-=" "*="  "/="
-      "//=" "%=" "^=" "..="
-    ] @indent
-  )
+  assign_symbol: _ @indent
   .
   (_) @expr-end
   (#not-same-line? @indent @expr-start)
@@ -84,13 +80,10 @@
   (#set! "scope" "all")
 )
 
-(
+(_
   (_) @expr-start
   .
-  [
-    "="   "+=" "-=" "*="  "/="
-    "//=" "%=" "^=" "..="
-  ] @assign-sym
+  assign_symbol: _ @assign-sym
   .
   (_) @indent
   (#same-line? @expr-start @assign-sym)
@@ -123,3 +116,11 @@
   (#not-same-line? @indent @expr-content)
   (#not-kind-eq? @expr-content "ifexp")
 ) @indent
+
+(else_clause
+  "else" @outdent
+)
+
+(elseif_clause
+  "elseif" @outdent
+)

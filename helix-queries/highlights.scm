@@ -718,7 +718,7 @@
     field_name: (name) @function.method
   )
   .
-  (paramlist)
+  (paramlist)?
 )
 
 (_
