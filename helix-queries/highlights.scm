@@ -560,6 +560,32 @@
 
 (_
   table_name: (name) @variable.builtin
+  (#eq? @variable.builtin "vector")
+  (key
+    field_name: (name) @function.builtin
+    (#any-of? @function.builtin
+      "create" "magnitude" "normalize"
+      "cross"  "dot"       "angle"
+      "floor"  "ceil"      "abs"
+      "sign"   "clamp"     "max"
+      "min"
+    )
+  )?
+)
+
+(_
+  table_name: (name) @variable.builtin
+  (#eq? @variable.builtin "vector")
+  (key
+    field_name: (name) @constant.builtin
+    (#any-of? @constant.builtin
+      "zero" "one"
+    )
+  )?
+)
+
+(_
+  table_name: (name) @variable.builtin
   (#eq? @variable.builtin "Content")
   (key
     field_name: (name) @function.builtin
