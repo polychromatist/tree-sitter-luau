@@ -128,6 +128,10 @@
         "named": true
       },
       {
+        "type": "type_fn_stmt",
+        "named": true
+      },
+      {
         "type": "type_stmt",
         "named": true
       },
@@ -1359,6 +1363,10 @@
         {
           "type": "proptype",
           "named": true
+        },
+        {
+          "type": "readwrite",
+          "named": true
         }
       ]
     }
@@ -1796,6 +1804,11 @@
     }
   },
   {
+    "type": "readwrite",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "repeat_stmt",
     "named": true,
     "fields": {
@@ -1987,6 +2000,90 @@
       "types": [
         {
           "type": "kvtypelist",
+          "named": true
+        },
+        {
+          "type": "readwrite",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_fn_stmt",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      },
+      "function_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "name",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "&",
+            "named": false
+          },
+          {
+            "type": "|",
+            "named": false
+          }
+        ]
+      },
+      "return_type": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "&",
+            "named": false
+          },
+          {
+            "type": "type",
+            "named": true
+          },
+          {
+            "type": "typepack",
+            "named": true
+          },
+          {
+            "type": "|",
+            "named": false
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "generic",
+          "named": true
+        },
+        {
+          "type": "genpack",
+          "named": true
+        },
+        {
+          "type": "paramlist",
           "named": true
         }
       ]
@@ -2672,6 +2769,10 @@
     "named": false
   },
   {
+    "type": "read",
+    "named": false
+  },
+  {
     "type": "repeat",
     "named": false
   },
@@ -2705,6 +2806,10 @@
   },
   {
     "type": "while",
+    "named": false
+  },
+  {
+    "type": "write",
     "named": false
   },
   {

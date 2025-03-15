@@ -2,89 +2,38 @@
 
 "local" @keyword.storage.modifier
 
+"type" @keyword.storage.type
+
+"function" @keyword.function
+
 (break_stmt) @keyword.control
 (continue_stmt) @keyword.control
+(readwrite) @keyword.storage.modifier
 
-(do_stmt
 [
   "do"
   "end"
-] @keyword)
+] @keyword
 
-(while_stmt
 [
   "while"
-  "do"
-  "end"
-] @keyword.control.repeat)
-
-(repeat_stmt
-[
   "repeat"
   "until"
-] @keyword.control.repeat)
+  "for"
+] @keyword.control.repeat
 
-(if_stmt
 [
   "if"
   "elseif"
   "else"
   "then"
-  "end"
-] @keyword.control.conditional)
+] @keyword.control.conditional
 
-(elseif_clause
 [
-  "elseif"
-  "then"
-  "end"
-] @keyword.control.conditional)
-
-(else_clause
-[
-  "else"
-  "end"
-] @keyword.control.conditional)
-
-(for_in_stmt
-[
-  "for"
   "in"
-  "do"
-  "end"
-] @keyword.control.repeat)
-
-(for_range_stmt
-[
-  "for"
-  "do"
-  "end"
-] @keyword.control.repeat)
-
-(fn_stmt
-[
-  "function"
-  "end"
-] @keyword.storage.type)
-
-(local_fn_stmt
-[
- "function"
- "end"
-] @keyword.function)
-
-(anon_fn
-[
-  "function"
-  "end"
-] @keyword.function)
-
-;; Operators
-
-[
   "and"
-  "not"
   "or"
+  "not"
 ] @keyword.operator
 
 (ifexp
@@ -96,7 +45,6 @@
 ] @keyword.operator)
 
 (type_stmt "export" @keyword.control.import) 
-(type_stmt "type" @keyword.storage.type) 
 
 (_
   operator: [
@@ -120,6 +68,88 @@
   ","
   "."
 ] @punctuation.delimiter
+
+(string) @string
+
+(_
+  variable_name: (name) @variable
+)
+
+(_
+  parameter_name: (name) @variable.parameter
+)
+
+(_
+  method_name: (name) @function.method
+)
+
+(_
+  function_name: (name) @function
+)
+
+(_
+  table_name: (name) @namespace
+)
+
+(_
+  field_name: (name) @variable.other.member
+)
+
+(ERROR) @error
+
+(table
+[
+  "{"
+  "}"
+] @constructor)
+
+; special comment directives
+(chunk
+  .
+  (comment)*
+  .
+  (comment) @keyword.directive
+  (#match? @keyword.directive "^--!(strict|native)[\r]?$")
+)
+
+(comment) @comment
+
+(number) @constant.numeric
+
+(unicode_escape
+  "{" @punctuation.special
+  "codepoint" @constant.numeric.integer
+  "}" @punctuation.special
+)
+(unicode_escape) @constant.character.escape
+(dec_byte_escape) @constant.character.escape
+(hex_byte_escape) @constant.character.escape
+(simple_escape) @constant.character.escape
+
+(interp_start) @punctuation.special
+(interp_content) @string
+(interp_brace_open) @punctuation.special
+(interp_brace_close) @punctuation.special
+(interp_end) @punctuation.special
+
+[
+ "("
+ ")"
+ "["
+ "]"
+ "{"
+ "}"
+ "<"
+ ">"
+] @punctuation.bracket
+
+(_
+  type_name: (name) @type
+)
+
+(type_stmt
+  left: (name) @type
+)
 
 (_
   attribute_name: (name) @attribute
@@ -147,6 +177,48 @@
 
 (_
   module_namespace: (name) @namespace
+)
+
+; if the value of the field is a function, then
+; color the name of a field assignment as a method
+(field
+  field_name: (name) @function.method
+  value: (anon_fn)
+)
+
+; if a call statement is an invocation on a variable,
+; color the last name in a name sequence as a function
+(call_stmt
+  invoked: (var
+    variable_name: (name) @function
+  )
+)
+
+(call_stmt
+  invoked: (var
+    table_name: (name) @namespace
+    (key
+      field_name: (name) @function
+    )
+    .
+  )
+)
+
+(call_stmt
+  invoked: (_
+    (key
+      field_name: (name) @function
+    )
+    .
+  )
+)
+
+(fn_stmt
+  (key
+    field_name: (name) @function.method
+  )
+  .
+  (paramlist)?
 )
 
 (_
@@ -359,14 +431,6 @@
   )
 )
 
-(_
-  type_name: (name) @type
-)
-
-(type_stmt
-  left: (name) @type
-)
-
 (var
   variable_name: (name) @function.builtin
   (#any-of? @function.builtin
@@ -383,6 +447,18 @@
     "typeof"        "unpack"         "UserSettings"
     "version"       "warn"           "workspace"
     "xpcall")
+)
+
+(var
+  .
+  (name) @variable.builtin
+  (#any-of? @variable.builtin
+    "_G"        "_VERSION" "bit32"
+    "coroutine" "debug"    "game"
+    "math"      "os"       "plugin"
+    "script"    "string"   "table"
+    "task"      "utf8"     "workspace"
+  )
 )
 
 (_ 
@@ -595,6 +671,27 @@
   )?
 )
 
+(type_fn_stmt
+  body: (_
+    [
+      (_
+        variable_name: (name) @variable.builtin
+        (#eq? @variable.builtin "types")
+      )
+      (_
+        table_name: (name) @variable.builtin
+        (#eq? @variable.builtin "types")
+        (key
+          field_name: (name) @function.builtin
+          (#any-of? @function.builtin
+            ""
+          )
+        )
+      )
+    ]
+  )
+)
+
 (call_stmt
   method_table: (var
     (name) @variable.builtin
@@ -695,129 +792,3 @@
   )
 )
 
-(var
-  .
-  (name) @variable.builtin
-  (#any-of? @variable.builtin
-    "_G"        "_VERSION" "bit32"
-    "coroutine" "debug"    "game"
-    "math"      "os"       "plugin"
-    "script"    "string"   "table"
-    "task"      "utf8"     "workspace"
-  )
-)
-
-; if the value of the field is a function, then
-; color the name of a field assignment as a method
-(field
-  field_name: (name) @function.method
-  value: (anon_fn)
-)
-
-; if a call statement is an invocation on a variable,
-; color the last name in a name sequence as a function
-(call_stmt
-  invoked: (var
-    variable_name: (name) @function
-  )
-)
-(call_stmt
-  invoked: (var
-    table_name: (name) @namespace
-    (key
-      field_name: (name) @function
-    )
-    .
-  )
-)
-(call_stmt
-  invoked: (_
-    (key
-      field_name: (name) @function
-    )
-    .
-  )
-)
-
-(fn_stmt
-  (key
-    field_name: (name) @function.method
-  )
-  .
-  (paramlist)?
-)
-
-(_
-  parameter_name: (name) @variable.parameter
-)
-
-(_
-  method_name: (name) @function.method
-)
-
-(_
-  function_name: (name) @function
-)
-
-(_
-  table_name: (name) @namespace
-)
-
-(_
-  field_name: (name) @variable.other.member
-)
-
-
-(table
-[
-  "{"
-  "}"
-] @constructor)
-
-; special comment directives
-(chunk
-  .
-  (comment)*
-  .
-  (comment) @keyword.directive
-  (#match? @keyword.directive "^--!(strict|native)[\r]?$")
-)
-
-(comment) @comment
-
-(number) @constant.numeric
-
-(unicode_escape
-  "{" @punctuation.special
-  "codepoint" @constant.numeric.integer
-  "}" @punctuation.special
-)
-(unicode_escape) @constant.character.escape
-(dec_byte_escape) @constant.character.escape
-(hex_byte_escape) @constant.character.escape
-(simple_escape) @constant.character.escape
-
-(interp_start) @punctuation.special
-(interp_content) @string
-(interp_brace_open) @punctuation.special
-(interp_brace_close) @punctuation.special
-(interp_end) @punctuation.special
-
-[
- "("
- ")"
- "["
- "]"
- "{"
- "}"
- "<"
- ">"
-] @punctuation.bracket
-
-(string) @string
-
-(_
-  variable_name: (name) @variable
-)
-
-(ERROR) @error

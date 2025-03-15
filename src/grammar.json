@@ -169,6 +169,10 @@
         {
           "type": "SYMBOL",
           "name": "type_stmt"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "type_fn_stmt"
         }
       ]
     },
@@ -866,6 +870,75 @@
             "value": "[\\s\\n\\r]"
           }
         },
+        {
+          "type": "SYMBOL",
+          "name": "_type_assign"
+        }
+      ]
+    },
+    "type_fn_stmt": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "export"
+                },
+                {
+                  "type": "IMMEDIATE_TOKEN",
+                  "content": {
+                    "type": "PATTERN",
+                    "value": "[\\s\\n\\r]"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "type"
+        },
+        {
+          "type": "IMMEDIATE_TOKEN",
+          "content": {
+            "type": "PATTERN",
+            "value": "[\\s\\n\\r]"
+          }
+        },
+        {
+          "type": "PREC",
+          "value": 1,
+          "content": {
+            "type": "STRING",
+            "value": "function"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "function_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "name"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_fn_body"
+        }
+      ]
+    },
+    "_type_assign": {
+      "type": "SEQ",
+      "members": [
         {
           "type": "FIELD",
           "name": "left",
@@ -3222,6 +3295,27 @@
           "name": "kvtypelist"
         },
         {
+          "type": "SYMBOL",
+          "name": "_array_type"
+        }
+      ]
+    },
+    "_array_type": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "readwrite"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
           "type": "FIELD",
           "name": "array_type_specifier",
           "content": {
@@ -3232,15 +3326,32 @@
       ]
     },
     "_tbtype_kv": {
-      "type": "CHOICE",
+      "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "indexertype"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "readwrite"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
-          "type": "SYMBOL",
-          "name": "proptype"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "indexertype"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "proptype"
+            }
+          ]
         }
       ]
     },
@@ -4022,6 +4133,19 @@
     "name": {
       "type": "PATTERN",
       "value": "[a-zA-Z_][0-9a-zA-Z_]*"
+    },
+    "readwrite": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "read"
+        },
+        {
+          "type": "STRING",
+          "value": "write"
+        }
+      ]
     },
     "attribute": {
       "type": "CHOICE",

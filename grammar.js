@@ -140,7 +140,8 @@ module.exports = grammar({
       $.for_in_stmt,
       $.fn_stmt,
       $.local_fn_stmt,
-      $.type_stmt
+      $.type_stmt,
+      $.type_fn_stmt
     ),
 
     local_fn_stmt: $ => seq(
@@ -292,6 +293,22 @@ module.exports = grammar({
       )),
       "type",
       token.immediate(WHITESPACE),
+      $._type_assign
+    ),
+
+    type_fn_stmt: $ => seq(
+      optional(seq(
+        "export",
+        token.immediate(WHITESPACE)
+      )),
+      "type",
+      token.immediate(WHITESPACE),
+      prec(1, "function"),
+      field("function_name", $.name),
+      $._fn_body
+    ),
+
+    _type_assign: $ => seq(
       field("left", $.name),
       optional(seq(
         "<",
@@ -630,12 +647,19 @@ module.exports = grammar({
     ),
     _tbtype_content: $ => choice(
       $.kvtypelist,
+      $._array_type
+    ),
+    _array_type: $ => seq(
+      optional($.readwrite),
       field("array_type_specifier", $._outertype)
     ),
     // _tbtype_array: $ => alias($._outertype, $.array),
-    _tbtype_kv: $ => choice(
-      $.indexertype,
-      $.proptype
+    _tbtype_kv: $ => seq(
+      optional($.readwrite),
+      choice(
+        $.indexertype,
+        $.proptype
+      ),
     ),
     kvtypelist: $ => _list($._tbtype_kv, $.fieldsep),
     indexertype: $ => seq(
@@ -736,6 +760,11 @@ module.exports = grammar({
     nil: () => "nil",
 
     name: () => NAME,
+
+    readwrite: () => choice(
+      "read",
+      "write"
+    ),
     
     attribute: $ => choice(
       seq("@",
