@@ -2146,6 +2146,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "type_instantiator"
+        },
+        {
+          "type": "SYMBOL",
           "name": "call_stmt"
         },
         {
@@ -2165,6 +2169,51 @@
         "type": "SYMBOL",
         "name": "prefix"
       }
+    },
+    "type_instantiator": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "instantiatee",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_prefixexp"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_type_instantiator"
+        }
+      ]
+    },
+    "_type_instantiator": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC_LEFT",
+            "value": 1,
+            "content": {
+              "type": "STRING",
+              "value": "<<"
+            }
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "instantiator_list",
+          "content": {
+            "type": "SYMBOL",
+            "name": "typelist"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ">>"
+        }
+      ]
     },
     "exp_wrap": {
       "type": "SEQ",
@@ -2378,6 +2427,10 @@
             {
               "type": "SYMBOL",
               "name": "_tbl_seq"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "type_instantiator"
             },
             {
               "type": "SYMBOL",

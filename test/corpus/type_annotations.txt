@@ -767,3 +767,111 @@ end
             (explist
               (var
                 (name)))))))))
+
+===
+Basic type instantiation
+===
+
+type Decode<T, U> = (z: T) -> U
+
+local gendec: <T, U>(method: string) -> Decode<T, U>
+gendec = function<T, U>(method: string)
+  if method == "buffer2str" then
+    return buffer.tostring :: Decode<buffer, string>
+  end
+end
+
+local b2s = gendec<<buffer, string>>("buffer2str")
+
+---
+
+(chunk
+  (type_stmt
+    (name)
+    (genericdef
+      (generic
+        (name)))
+    (genericdef
+      (generic
+        (name)))
+    (fntype
+      (paramtypelist
+        (name)
+        (namedtype
+          (name)))
+      (namedtype
+        (name))))
+  (local_var_stmt
+    (bindinglist
+      (binding
+        (name)
+        (fntype
+          (generic
+            (name))
+          (generic
+            (name))
+          (paramtypelist
+            (name)
+            (namedtype
+              (name)))
+          (namedtype
+            (name)
+            (typeparam
+              (namedtype
+                (name)))
+            (typeparam
+              (namedtype
+                (name))))))))
+  (assign_stmt
+    (varlist
+      (var
+        (name)))
+    (explist
+      (anon_fn
+        (generic
+          (name))
+        (generic
+          (name))
+        (paramlist
+          (param
+            (name)
+            (namedtype
+              (name))))
+        (block
+          (if_stmt
+            (binexp
+              (var
+                (name))
+              (string))
+            (block
+              (ret_stmt
+                (explist
+                  (cast
+                    (var
+                      (name)
+                      (key
+                        (name)))
+                    (namedtype
+                      (name)
+                      (typeparam
+                        (namedtype
+                          (name)))
+                      (typeparam
+                        (namedtype
+                          (name)))))))))))))
+  (local_var_stmt
+    (bindinglist
+      (binding
+        (name)))
+    (explist
+      (call_stmt
+        (type_instantiator
+          (var
+            (name))
+          (typelist
+            (namedtype
+              (name))
+            (namedtype
+              (name))))
+        (arglist
+          (string))))))

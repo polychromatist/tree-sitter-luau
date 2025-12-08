@@ -70,6 +70,10 @@
         "named": true
       },
       {
+        "type": "type_instantiator",
+        "named": true
+      },
+      {
         "type": "var",
         "named": true
       }
@@ -559,6 +563,10 @@
           },
           {
             "type": "exp_wrap",
+            "named": true
+          },
+          {
+            "type": "type_instantiator",
             "named": true
           },
           {
@@ -2123,6 +2131,44 @@
     }
   },
   {
+    "type": "type_instantiator",
+    "named": true,
+    "fields": {
+      "instantiatee": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "call_stmt",
+            "named": true
+          },
+          {
+            "type": "exp_wrap",
+            "named": true
+          },
+          {
+            "type": "type_instantiator",
+            "named": true
+          },
+          {
+            "type": "var",
+            "named": true
+          }
+        ]
+      },
+      "instantiator_list": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "typelist",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "type_stmt",
     "named": true,
     "fields": {
@@ -2390,6 +2436,10 @@
         {
           "type": "key",
           "named": true
+        },
+        {
+          "type": "type_instantiator",
+          "named": true
         }
       ]
     }
@@ -2654,6 +2704,10 @@
     "named": false
   },
   {
+    "type": "<<",
+    "named": false
+  },
+  {
     "type": "<=",
     "named": false
   },
@@ -2671,6 +2725,10 @@
   },
   {
     "type": ">=",
+    "named": false
+  },
+  {
+    "type": ">>",
     "named": false
   },
   {

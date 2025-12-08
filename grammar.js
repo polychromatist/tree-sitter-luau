@@ -453,12 +453,23 @@ module.exports = grammar({
     fieldsep: () => choice(",", ";"),
 
     prefix: $ => choice(
-      $.var, 
+      $.var,
+      $.type_instantiator,
       $.call_stmt, 
       $.exp_wrap
     ),
     prefixexp: $ => $.prefix,
     _prefixexp: $ => prec(PREC.CALL, $.prefix),
+    
+    type_instantiator: $ => seq(
+      field("instantiatee", $._prefixexp),
+      $._type_instantiator
+    ),
+    _type_instantiator: $ => seq(
+      token(prec.left(1, "<<")),
+      field("instantiator_list", $.typelist),
+      ">>"
+    ),
 
     exp_wrap: $ => seq("(", $.exp, ")"),
 
@@ -504,6 +515,7 @@ module.exports = grammar({
       choice(
         field("table_name", $.name),
         $._tbl_seq,
+        $.type_instantiator,
         $.call_stmt,
         $.exp_wrap),
       $.key
@@ -520,6 +532,7 @@ module.exports = grammar({
       ".",
       field("field_name", $.name)
     ),
+
     /*
     field_named: $ => seq(
       ".",
