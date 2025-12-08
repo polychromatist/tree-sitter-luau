@@ -531,7 +531,7 @@ module.exports = grammar({
       "]"
     ),*/
 
-    anon_fn: $ => seq("function", $._fn_body),
+    anon_fn: $ => seq(optional($._attrlist), "function", $._fn_body),
     _fn_body: $ => seq(
       optional(seq(
         "<",

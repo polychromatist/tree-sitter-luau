@@ -239,6 +239,10 @@
       "required": false,
       "types": [
         {
+          "type": "attribute",
+          "named": true
+        },
+        {
           "type": "generic",
           "named": true
         },

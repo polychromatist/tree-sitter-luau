@@ -722,3 +722,48 @@ local item: {read name: string, nickname: string?, write [number]: number } = {
             (arglist
               (number)
               (number))))))))
+
+===
+Function attributes in anonymous functions
+===
+
+local x = @native function(y)
+  for i = 1, 1e7 do
+    y += math.random()
+  end
+  return y
+end
+
+---
+
+(chunk
+  (local_var_stmt
+    (bindinglist
+      (binding
+        (name)))
+    (explist
+      (anon_fn
+        (attribute)
+        (paramlist
+          (param
+            (name)))
+        (block
+          (for_range_stmt
+            (binding
+              (name))
+            (number)
+            (number)
+            (block
+              (var_stmt
+                (var
+                  (name))
+                (call_stmt
+                  (var
+                    (name)
+                    (key
+                      (name)))
+                  (arglist)))))
+          (ret_stmt
+            (explist
+              (var
+                (name)))))))))
