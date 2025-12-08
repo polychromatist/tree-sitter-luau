@@ -9,6 +9,7 @@
   ; (elseif_clause)
   (fn_stmt)
   (local_fn_stmt)
+  (type_fn_stmt)
   (anon_fn)
   (bindinglist)
   (varlist)

@@ -1247,6 +1247,20 @@
     "type": "indexertype",
     "named": true,
     "fields": {
+      "access_qualifier": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "read",
+            "named": true
+          },
+          {
+            "type": "write",
+            "named": true
+          }
+        ]
+      },
       "indexer_type_specifier": {
         "multiple": true,
         "required": true,
@@ -1362,10 +1376,6 @@
         },
         {
           "type": "proptype",
-          "named": true
-        },
-        {
-          "type": "readwrite",
           "named": true
         }
       ]
@@ -1759,6 +1769,20 @@
     "type": "proptype",
     "named": true,
     "fields": {
+      "access_qualifier": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "read",
+            "named": true
+          },
+          {
+            "type": "write",
+            "named": true
+          }
+        ]
+      },
       "field_name": {
         "multiple": false,
         "required": true,
@@ -1802,11 +1826,6 @@
         ]
       }
     }
-  },
-  {
-    "type": "readwrite",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "repeat_stmt",
@@ -1961,6 +1980,20 @@
     "type": "tbtype",
     "named": true,
     "fields": {
+      "access_qualifier": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "read",
+            "named": true
+          },
+          {
+            "type": "write",
+            "named": true
+          }
+        ]
+      },
       "array_type_specifier": {
         "multiple": true,
         "required": false,
@@ -2000,10 +2033,6 @@
       "types": [
         {
           "type": "kvtypelist",
-          "named": true
-        },
-        {
-          "type": "readwrite",
           "named": true
         }
       ]
@@ -2310,8 +2339,8 @@
         "required": true,
         "types": [
           {
-            "type": "?",
-            "named": false
+            "type": "option",
+            "named": true
           }
         ]
       }
@@ -2641,10 +2670,6 @@
     "named": false
   },
   {
-    "type": "?",
-    "named": false
-  },
-  {
     "type": "@",
     "named": false
   },
@@ -2765,12 +2790,16 @@
     "named": true
   },
   {
+    "type": "option",
+    "named": true
+  },
+  {
     "type": "or",
     "named": false
   },
   {
     "type": "read",
-    "named": false
+    "named": true
   },
   {
     "type": "repeat",
@@ -2810,7 +2839,7 @@
   },
   {
     "type": "write",
-    "named": false
+    "named": true
   },
   {
     "type": "{",

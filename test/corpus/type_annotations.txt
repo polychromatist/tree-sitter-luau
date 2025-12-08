@@ -190,7 +190,8 @@ type Foo = string?
     (name)
     (untype
       (namedtype
-        (name)))))
+        (name))
+      (option))))
 
 ==================
 Complex optional type declaration 1
@@ -206,7 +207,8 @@ type Foo = string | number?
     (bintype
       (namedtype (name))
       (untype
-        (namedtype (name))))))
+        (namedtype (name))
+        (option)))))
 
 ==================
 Complex optional type declaration 2
@@ -223,7 +225,8 @@ type Foo = (string | number)?
       (wraptype
         (bintype
           (namedtype (name))
-          (namedtype (name)))))))
+          (namedtype (name))))
+      (option))))
 
 ==================
 Function type declaration 1
@@ -668,3 +671,54 @@ end
               field_name: (name))))
         (explist
           (nil))))))
+
+===
+Read and write attributes
+===
+
+local item: {read name: string, nickname: string?, write [number]: number } = {
+  name = "Sword",
+  [100] = math.random(0,1e6)
+}
+
+---
+
+(chunk
+  (local_var_stmt
+    (bindinglist
+      (binding
+        variable_name: (name)
+        type_specifier: (tbtype
+          (kvtypelist
+            (proptype
+              access_qualifier: (read)
+              field_name: (name)
+              type_specifier: (namedtype
+                type_name: (name)))
+            (proptype
+              field_name: (name)
+              type_specifier: (untype
+                operand: (namedtype
+                  type_name: (name))
+                operator: (option)))
+            (indexertype
+              access_qualifier: (write)
+              indexer_type_specifier: (namedtype
+                type_name: (name))
+              value_type_specifier: (namedtype
+                type_name: (name)))))))
+    (explist
+      (table
+        (field
+          field_name: (name)
+          value: (string))
+        (field
+          field_indexer: (number)
+          value: (call_stmt
+            invoked: (var
+              table_name: (name)
+              (key
+                field_name: (name)))
+            (arglist
+              (number)
+              (number))))))))

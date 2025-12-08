@@ -8,7 +8,11 @@
 
 (break_stmt) @keyword.control
 (continue_stmt) @keyword.control
-(readwrite) @keyword.storage.modifier
+
+[
+  (read)
+  (write)
+] @keyword.storage.modifier
 
 [
   "do"
@@ -70,6 +74,8 @@
 ] @punctuation.delimiter
 
 (string) @string
+
+(option) @operator
 
 (_
   variable_name: (name) @variable
@@ -224,7 +230,7 @@
 (_
   type_name: (name) @type.builtin
   (#any-of? @type.builtin
-    "number" "string" "any"
+    "number" "string" "any" "vector"
     "never"                             "unknown"                          "boolean"
     "thread"                            "userdata"                         "Accessory"
     "Accoutrement"                      "Actor"                            "AdGui"
@@ -657,7 +663,33 @@
     (#any-of? @constant.builtin
       "zero" "one"
     )
+  )
+)
+
+(_
+  table_name: (name) @variable.builtin
+  (#eq? @variable.builtin "types")
+  (key
+    field_name: (name) @function.builtin
+    (#any-of? @function.builtin
+      "singleton"      "negationof" "unionof"
+      "intersectionof" "newtable"   "newfunction"
+      "copy"           "generic"    "optional"
+    )
   )?
+)
+
+(_
+  table_name: (name) @variable.builtin
+  (#eq? @variable.builtin "types")
+  (key
+    field_name: (name) @constant.builtin
+    (#any-of? @constant.builtin
+      "any"     "unknown" "never"
+      "boolean" "buffer"  "number"
+      "string"  "thread"
+    )
+  )
 )
 
 (_
@@ -671,24 +703,14 @@
   )?
 )
 
-(type_fn_stmt
-  body: (_
-    [
-      (_
-        variable_name: (name) @variable.builtin
-        (#eq? @variable.builtin "types")
-      )
-      (_
-        table_name: (name) @variable.builtin
-        (#eq? @variable.builtin "types")
-        (key
-          field_name: (name) @function.builtin
-          (#any-of? @function.builtin
-            ""
-          )
-        )
-      )
-    ]
+(_
+  table_name: (name) @variable.builtin
+  (#eq? @variable.builtin "Content")
+  (key
+    field_name: (name) @constant.builtin
+    (#any-of? @constant.builtin
+      "none"
+    )
   )
 )
 

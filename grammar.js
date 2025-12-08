@@ -650,12 +650,11 @@ module.exports = grammar({
       $._array_type
     ),
     _array_type: $ => seq(
-      optional($.readwrite),
+      optional(field("access_qualifier", $._readwrite)),
       field("array_type_specifier", $._outertype)
     ),
     // _tbtype_array: $ => alias($._outertype, $.array),
     _tbtype_kv: $ => seq(
-      optional($.readwrite),
       choice(
         $.indexertype,
         $.proptype
@@ -663,6 +662,7 @@ module.exports = grammar({
     ),
     kvtypelist: $ => _list($._tbtype_kv, $.fieldsep),
     indexertype: $ => seq(
+      optional(field("access_qualifier", $._readwrite)),
       "[",
       field("indexer_type_specifier", $._outertype),
       "]",
@@ -670,6 +670,7 @@ module.exports = grammar({
       field("value_type_specifier", $._outertype)
     ),
     proptype: $ => seq(
+      optional(field("access_qualifier", $._readwrite)),
       field("field_name", $.name),
       ":",
       field("type_specifier", $._outertype)
@@ -690,8 +691,10 @@ module.exports = grammar({
 
     untype: $ => prec.left(PREC.TYPEOPT, seq(
       field("operand", $.type),
-      field("operator", "?"))
+      field("operator", $.option))
     ),
+
+    option: () => "?",
 
     generic: $ => $.name,
     _genlist: $ => _list_vrd($.generic, $._genpack_list, ","),
@@ -761,10 +764,14 @@ module.exports = grammar({
 
     name: () => NAME,
 
-    readwrite: () => choice(
-      "read",
-      "write"
+    _readwrite: $ => choice(
+      $.read,
+      $.write
     ),
+
+    read: () => "read",
+
+    write: () => "write",
     
     attribute: $ => choice(
       seq("@",

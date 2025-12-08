@@ -12,9 +12,9 @@
       "external-files": [
         "src/luauts_pcg_hash_table.h"
       ],
-      "highlights": "helix-queries\\highlights.scm",
-      "locals": "helix-queries\\locals.scm",
-      "injections": "helix-queries\\injections.scm"
+      "highlights": "helix-queries/highlights.scm",
+      "locals": "helix-queries/locals.scm",
+      "injections": "helix-queries/injections.scm"
     }
   ],
   "metadata": {

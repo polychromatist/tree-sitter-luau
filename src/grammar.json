@@ -3307,8 +3307,12 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "readwrite"
+              "type": "FIELD",
+              "name": "access_qualifier",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_readwrite"
+              }
             },
             {
               "type": "BLANK"
@@ -3328,18 +3332,6 @@
     "_tbtype_kv": {
       "type": "SEQ",
       "members": [
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "readwrite"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
         {
           "type": "CHOICE",
           "members": [
@@ -3396,6 +3388,22 @@
       "type": "SEQ",
       "members": [
         {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "access_qualifier",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_readwrite"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
           "type": "STRING",
           "value": "["
         },
@@ -3428,6 +3436,22 @@
     "proptype": {
       "type": "SEQ",
       "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "access_qualifier",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_readwrite"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
         {
           "type": "FIELD",
           "name": "field_name",
@@ -3539,12 +3563,16 @@
             "type": "FIELD",
             "name": "operator",
             "content": {
-              "type": "STRING",
-              "value": "?"
+              "type": "SYMBOL",
+              "name": "option"
             }
           }
         ]
       }
+    },
+    "option": {
+      "type": "STRING",
+      "value": "?"
     },
     "generic": {
       "type": "SYMBOL",
@@ -4134,18 +4162,26 @@
       "type": "PATTERN",
       "value": "[a-zA-Z_][0-9a-zA-Z_]*"
     },
-    "readwrite": {
+    "_readwrite": {
       "type": "CHOICE",
       "members": [
         {
-          "type": "STRING",
-          "value": "read"
+          "type": "SYMBOL",
+          "name": "read"
         },
         {
-          "type": "STRING",
-          "value": "write"
+          "type": "SYMBOL",
+          "name": "write"
         }
       ]
+    },
+    "read": {
+      "type": "STRING",
+      "value": "read"
+    },
+    "write": {
+      "type": "STRING",
+      "value": "write"
     },
     "attribute": {
       "type": "CHOICE",
